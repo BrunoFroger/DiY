@@ -34,7 +34,7 @@ DisplayCadreClass::~DisplayCadreClass()
 //*       init
 //*
 //*********************************************
-void DisplayCadreClass::init(Adafruit_ILI9341 *tft, int originX, int originY, int sizeX, int sizeY, int colorCadre, int colorBackground, int colorText, int typeCadre, char *name){
+void DisplayCadreClass::init(tftType *tft, int originX, int originY, int sizeX, int sizeY, int colorCadre, int colorBackground, int colorText, int typeCadre, char *name){
     this->tft = tft;
     this->originX = originX;
     this->originY = originY;

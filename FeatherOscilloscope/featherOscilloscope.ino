@@ -36,7 +36,7 @@ int loopDisplayMesureTexte;
 //=================================================
 void setup() {        
     // initialize serial communication
-    Serial.begin(38400);
+    Serial.begin(115200);
     int timeoutInitSerial = 100;
     while (timeoutInitSerial-- > 0)
     {
@@ -44,6 +44,7 @@ void setup() {
             break;
         delay(10);
     }
+    delay(1000);
     Serial.println("Serial initialized");
 
     tftDisplay.initTft();
@@ -52,7 +53,7 @@ void setup() {
     }
     mesure.init();
 
-    Adafruit_ILI9341 *tft;
+    tftType *tft;
     tft = tftDisplay.getTft();
     int tailleEcranX = tftDisplay.getSizeX();
     int tailleEcranY = tftDisplay.getSizeY();

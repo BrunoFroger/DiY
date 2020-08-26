@@ -26,8 +26,6 @@ int nbColor = 6;
 int color[] = {_WHITE, _YELLOW, _BLACK, _RED, _GREEN, _BLUE};
 char textColor[][20] = {"blanc", "jaune", "noir", "rouge", "vert", "bleu"};
 
-
-
 //*********************************************
 //*
 //*       Constructor
@@ -58,25 +56,20 @@ void TftDisplayClass::initTft(){
     tft.begin();
 
     // read diagnostics (optional but can help debug problems)
-    uint8_t x = tft.readcommand8(ILI9341_RDMODE);
+    uint8_t x = tft.readcommand8(_RDMODE);
     Serial.print("Display Power Mode: 0x"); Serial.println(x, HEX);
-    x = tft.readcommand8(ILI9341_RDMADCTL);
+    x = tft.readcommand8(_RDMADCTL);
     Serial.print("MADCTL Mode: 0x"); Serial.println(x, HEX);
-    x = tft.readcommand8(ILI9341_RDPIXFMT);
-    Serial.print("Pixel Format: 0x"); Serial.println(x, HEX);
-    x = tft.readcommand8(ILI9341_RDIMGFMT);
-    Serial.print("Image Format: 0x"); Serial.println(x, HEX);
-    x = tft.readcommand8(ILI9341_RDSELFDIAG);
-    Serial.print("Self Diagnostic: 0x"); Serial.println(x, HEX); 
 
-    
+    delay(1000);
+    /*
     if (!ts.begin()) {
         Serial.println("Couldn't start touchscreen controller");
     }else{
         Serial.println("Touchscreen started");
-    }
+    }*/
 
-    tft.fillScreen(ILI9341_BLACK);
+    tft.fillScreen(_BLACK);
     tft.setRotation(TFT_ROTATION);
     if (TFT_ROTATION == 2 || TFT_ROTATION == 0){
         //mode portrait
@@ -137,7 +130,7 @@ void TftDisplayClass::addCadre(DisplayCadreClass *cadrePtr){
 //      getTft
 //
 //=================================================
-Adafruit_ILI9341 *TftDisplayClass::getTft(){
+tftType *TftDisplayClass::getTft(){
     return &this->tft;
 }
 

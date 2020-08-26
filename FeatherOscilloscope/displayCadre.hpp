@@ -5,7 +5,8 @@
 //
 
 #include <arduino.h>
-#include <Adafruit_ILI9341.h>
+#include "TftDisplay.hpp"
+#include "tftType.hpp"
 
 #ifndef __DISPLAYCADRE_HPP
 #define __DISPLAYCADRE_HPP
@@ -38,7 +39,7 @@ class DisplayCadreClass{
         ~DisplayCadreClass();
         char name[30];
         int getCadreType();
-        void init(Adafruit_ILI9341 *tft, int originX, int originY, int sizeX, int sizeY, int colorCadre, int colorBackground, int colorText, int typeCadre, char *name);
+        void init(tftType *tft, int originX, int originY, int sizeX, int sizeY, int colorCadre, int colorBackground, int colorText, int typeCadre, char *name);
         void refreshCadre();
         void setTextSize(int size);
         void addText(char *texte, int size, int ligne, int colonne);
@@ -56,7 +57,7 @@ class DisplayCadreClass{
         int colorBackground;
         int textSize;
         int colorText;
-        Adafruit_ILI9341 *tft;
+        tftType *tft;
         boolean refresh;
         dataText tblText[NB_LIGNE_TEXTE];
         int nbLigneText;
