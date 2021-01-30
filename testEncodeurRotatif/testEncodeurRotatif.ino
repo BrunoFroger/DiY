@@ -6,9 +6,9 @@
 
 
 
-int encoderPinA = 12;
-int encoderPinB = 11;
-int buttonPin = 10;
+int encoderPinA = 14;
+int encoderPinB = 12;
+int buttonPin = 2;
 
 volatile int lastEncoded = 0;
 volatile long encoderValue = 0;
@@ -17,9 +17,24 @@ long lastencoderValue = 0;
 
 int lastMSB = 0;
 int lastLSB = 0;
+int lastClock = HIGH;
 
 long readEncoderValue(void){
     return encoderValue/4;
+}
+void updateEncodeur(){
+    int newClock = digitalRead(encoderPinA);
+    if ((lastClock == LOW) && (newClock == HIGH)){
+        if (digitalRead(encoderPinB) == HIGH){
+            Serial.print("encodeur.cpp : readEncodeur-- => ");
+            encoderValue--;
+        } else {
+            Serial.print("encodeur.cpp : readEncodeur++ => ");
+            encoderValue++;
+        }
+        Serial.println(encoderValue);
+    }
+    lastClock = newClock;
 }
 
 boolean isButtonPushDown(void){
@@ -32,30 +47,29 @@ boolean isButtonPushDown(void){
 }
 
 void setup() {
-  Serial.begin (9600);
+  Serial.begin (115200);
 
-  pinMode(encoderPinA, INPUT); 
-  pinMode(encoderPinB, INPUT);
-  pinMode(buttonPin, INPUT);
+  pinMode(encoderPinA, INPUT_PULLUP); 
+  pinMode(encoderPinB, INPUT_PULLUP);
+  pinMode(buttonPin, INPUT_PULLUP);
 
   digitalWrite(encoderPinA, HIGH); //turn pullup resistor on
   digitalWrite(encoderPinB, HIGH); //turn pullup resistor on
 
   //call updateEncoder() when any high/low changed seen
   //on interrupt 0 (pin 2), or interrupt 1 (pin 3) 
-  attachInterrupt(11, updateEncoder, CHANGE); 
-  attachInterrupt(12, updateEncoder, CHANGE);
+  //attachInterrupt(encoderPinA, updateEncoder, CHANGE); 
+  //attachInterrupt(encoderPinB, updateEncoder, CHANGE);
 
 }
 
 void loop(){ 
   //Do stuff here
-
+  updateEncodeur();
   if(isButtonPushDown()){
     Serial.println("you push button down!!!");
   }
-  Serial.println(readEncoderValue());
-  delay(100); //just here to slow down the output, and show it will work  even during a delay
+  delay(1); //just here to slow down the output, and show it will work  even during a delay
 }
 
 

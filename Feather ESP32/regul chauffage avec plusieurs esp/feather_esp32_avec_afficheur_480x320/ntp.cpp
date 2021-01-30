@@ -176,6 +176,6 @@ void updateHeure(void){
             annee++;
         }
         sprintf(heureFormatee, "%2d:%02d:%02d", heure, minute, second);
-        sprintf(dateFormatee, "%5s %2d/%02d/%2d", dayOfWeek[jourSemaine], jour, mois, annee);
+        sprintf(dateFormatee, "%s %2d/%02d/%2d", dayOfWeek[jourSemaine], jour, mois, annee);
     }
 }

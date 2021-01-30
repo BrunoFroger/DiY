@@ -1,6 +1,6 @@
 //
 //
-//  testEcranCouleur.ino
+//  ESP 32 Fether avec afficheur 480 x 320.ino
 //
 //
 
@@ -70,6 +70,11 @@ boolean refreshMesures = true;
 char texte[100];
 
 int tblValues[NB_STORED_VALUES];
+
+int couleurTexte = _WHITE;
+int couleurFond = _BLACK;
+char oldHeure[50];
+char oldDate[50];
 
 //=================================================
 //
@@ -172,6 +177,7 @@ void displayValeurs(){
         sprintf(texte, "orig X=%d, orig Y=%d, taille X=%d, taille Y=%d", originX, originY, tailleX, tailleY);
         Serial.println(texte);
         tft.drawRect(originX, originY, tailleX, tailleY, colorCadre);
+        //tft.fillRect(originX+1, originY+1, tailleX-1, tailleY-1, couleurFond);
 
         refreshCadreValeurs = false;
 
@@ -181,14 +187,22 @@ void displayValeurs(){
         originX = originX + 10;
         originY = originY + (10 * numLigne++);
 
-        tft.setCursor(originX,originY);
         tft.setTextSize(textSize); 
+        tft.setCursor(originX,originY);
+        tft.setTextColor(_BLACK);
+        tft.print(oldHeure);
+        tft.setTextColor(_WHITE);
+        tft.setCursor(originX,originY);
+        strcpy(oldHeure,getHeureFormatee());
         tft.println(getHeureFormatee()); 
 
         originY = originY + ((textSize / 2) *  10 * numLigne++);
         textSize = 3;
         tft.setTextSize(textSize); 
         tft.setCursor(originX,originY);
+        tft.print(oldDate);
+        tft.setCursor(originX,originY);
+        strcpy(oldDate,getDateFormatee());
         tft.println(getDateFormatee());
 
         originY = originY + ((textSize / 2) *  10 * numLigne++);
@@ -234,6 +248,14 @@ void initTft(){
     }else{
         Serial.println("Touchscreen started");
     }
+
+    couleurTexte = _WHITE;
+    tft.setTextColor(couleurTexte);
+    couleurFond = _BLACK;
+    //tft.setBackgroundColor(couleurFond);
+
+    strcpy(oldHeure,"");
+    strcpy(oldDate,"");
     
 }
 
