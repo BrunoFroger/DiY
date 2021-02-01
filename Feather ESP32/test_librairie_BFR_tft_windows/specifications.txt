@@ -1,0 +1,33 @@
+//
+//
+//  Specifcations
+//  BFR_tft_window
+//
+//
+
+Ce fichier decrit les modifications  a pporter pour faire de ce developpement une librairie
+
+- But a atteindre :
+    - classe windows manager :
+        - gerer affichage des fenetres
+        - gerer barre des fenetres
+        - creer des fenetres
+        - detruire des fenetres
+        - mettre en avant plan ou arriere plan une fenetres
+        - iconiser/restaurer une fenetre
+        - deplacer une fenetre
+    - classe fenetre : 
+        - creation/destruction fenetre
+        - ecriture de texte dans la fenetre
+        - trace de traits dans la fenetre
+
+    - gerer le capteur tactile :
+        - deplacer une fenetre
+        - fermer une fenetre
+        - iconiser/restaurer une fenetre
+
+    - tache de gestion commandes clavier
+        - lecture clavier
+        - analyse commandes
+        - execution commandes
+
