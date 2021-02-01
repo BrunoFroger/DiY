@@ -56,8 +56,8 @@ void initWifi(void){    // init wifi connection
     cptTryWifi = 0;
 
     // TODO mettre a jour avec les identifiants du serveur web central
-    strcpy(wifiSsid,"TP-LINK_88E2");
-    strcpy(wifiPassword, "74546007");
+    strcpy(wifiSsid,"Gateway_chauffage");
+    strcpy(wifiPassword, "sdfhijsl5!qsd");
     
     // Connect to WiFi network
     Serial.print("Connecting to ");
@@ -121,5 +121,6 @@ char *getIp(){
 //
 //=========================================
 boolean isWifiConnected(){
+    //wifiConnected = (WiFi.status() == WL_CONNECTED);
     return wifiConnected;
 }

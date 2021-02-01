@@ -11,8 +11,5 @@
 extern void refreshNtp();
 extern void initNtp();
 extern void refreshNtpNow();
-extern void updateHeure(void);
-extern char *getHeureFormatee(void);
-extern char *getDateFormatee(void);
 
 #endif

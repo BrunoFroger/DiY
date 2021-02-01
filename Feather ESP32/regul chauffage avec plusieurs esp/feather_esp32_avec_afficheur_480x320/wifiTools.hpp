@@ -13,5 +13,6 @@ extern WiFiServer wifiServer;
 extern void initWifi(void);
 extern char *getSsid();
 extern char *getIp();
+extern boolean isWifiConnected();
 
 #endif
