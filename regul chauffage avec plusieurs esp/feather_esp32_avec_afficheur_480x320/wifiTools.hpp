@@ -10,7 +10,7 @@
 extern WiFiClient wifiClient;
 extern WiFiServer wifiServer;
 
-extern void initWifi(void);
+extern void initWifi(bool silence);
 extern char *getSsid();
 extern char *getIp();
 extern boolean isWifiConnected();

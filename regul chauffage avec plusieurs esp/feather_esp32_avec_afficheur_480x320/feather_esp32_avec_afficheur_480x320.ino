@@ -33,7 +33,17 @@ void setup() {
     delay(1000);
     Serial.println("Serial initialized");
 
+    Serial.println("---------------------------");
+    Serial.println("start initTft");
     initTft();
+    Serial.println("start initTft");
+
+    Serial.println("---------------------------");
+    Serial.println("start initWifi");
+    initWifi(false);
+    Serial.println("end initWifi");
+
+    initApi();
 
     Serial.println("end of setup");
   
@@ -48,14 +58,8 @@ void setup() {
 void loop(){ 
     //Serial.println("boucle principale");
 
-    //if (!isWifiConnected()){
-        //initWifi();
-    //}
-    displayTitle("Chauffage");
-    displayValeurs();
-    displayMenu();
-    displayMesures();
-    updateHeure();
+    refreshDisplay();
+    updateDatas();
 
     delay(LOOP_DELAY);
 

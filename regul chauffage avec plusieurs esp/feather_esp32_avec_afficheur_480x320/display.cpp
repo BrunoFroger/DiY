@@ -63,7 +63,6 @@ int nbItemMenu = 2;
 char itemMenu[][20] = {"parametres", "set "};
 
 boolean refreshTitle = true;
-boolean refreshMenu = true;
 boolean refreshCadreValeurs = true;
 boolean refreshMesures = true;
 
@@ -75,6 +74,10 @@ int couleurTexte = _WHITE;
 int couleurFond = _BLACK;
 char oldHeure[50];
 char oldDate[50];
+char oldConsigne[50];
+char oldChauffageOnOff[50];
+char oldWifiConnected[50];
+char oldTemperatureMesuree[50];
 
 //=================================================
 //
@@ -98,42 +101,69 @@ void displayTitle(char *title){
 //      displayMenu
 //
 //=================================================
-void displayMenu(){
-    if (refreshMenu){
-        Serial.println("displayMenu");
+void displayParametres(){
+    if (mesDonneesApi.parametresModifies){
+        mesDonneesApi.parametresModifies = false;
+        Serial.println("displayParametres");
         int colorCadre = _YELLOW;
         int originX = 5;
         int originY = (tft.height() / 2) + 40;
         int tailleX = tft.width() / 2 - 15;
         int tailleY = 100;
-        sprintf(texte, "orig X=%d, orig Y=%d, taille X=%d, taille Y=%d", originX, originY, tailleX, tailleY);
-        Serial.println(texte);
+        //sprintf(texte, "orig X=%d, orig Y=%d, taille X=%d, taille Y=%d", originX, originY, tailleX, tailleY);
+        //Serial.println(texte);
         tft.drawRect(originX, originY, tailleX, tailleY, colorCadre);
-        refreshMenu = false;
 
         // display text
         int numLigne = 1;
         int textSize = 2;
-        tft.setCursor(originX + 10,originY + (10 * numLigne++));
+        char tmp[50];
+
+        originX = originX + 10;
+        originY = originY + (10 * numLigne++);
+        tft.setCursor(originX, originY);
         tft.setTextSize(textSize); 
-        tft.println("Valeurs");
-        tft.setCursor(originX + 10,originY + (textSize * 10 * numLigne++));
+        tft.println("Parametres");
+        
+        originY = originY + (textSize * 10);
+        tft.setCursor(originX, originY);
         tft.print("Consigne : ");
-        tft.print(getConsigne());
-        tft.setCursor(originX + 10,originY + (textSize * 10 * numLigne++));
-        tft.print("ON/OFF   : ");
-        if (getChauffageOnOff()){
-            tft.println("ON");
+        tft.setTextColor(_BLACK);
+        tft.println(oldConsigne);
+        tft.setTextColor(_WHITE);
+        sprintf(tmp,"Consigne : %d", mesDonneesApi.consigne);
+        tft.setCursor(originX, originY);
+        tft.print(tmp);
+        strcpy(oldConsigne, tmp);
+
+        originY = originY + (textSize * 10);
+        tft.setCursor(originX, originY);
+        tft.print("Chauffage: ");
+        tft.setTextColor(_BLACK);
+        tft.println(oldChauffageOnOff);
+        if (mesDonneesApi.chauffageOnOff){
+            sprintf(tmp, "Chauffage: ON");
         } else {
-            tft.println("OFF");
+            sprintf(tmp, "Chauffage: OFF");
         }
-        tft.setCursor(originX + 10,originY + (textSize * 10 * numLigne++));
-        tft.print("Wifi     : ");
-        if (isWifiConnected()){
-            tft.println("OK");
+        tft.setTextColor(_WHITE);
+        tft.setCursor(originX, originY);
+        tft.println(tmp);
+        strcpy(oldChauffageOnOff,tmp);
+
+        originY = originY + (textSize * 10);
+        tft.setCursor(originX, originY);
+        tft.setTextColor(_BLACK);
+        tft.println(oldWifiConnected);
+        if (mesDonneesApi.WifiConnected){
+            sprintf(tmp, "Wifi     : Oui");
         } else {
-            tft.println("NOK");
+            sprintf(tmp, "Wifi     : Non");
         }
+        tft.setTextColor(_WHITE);
+        tft.setCursor(originX, originY);
+        tft.println(tmp);
+        strcpy(oldWifiConnected,tmp);
     }
 }
 
@@ -150,8 +180,8 @@ void displayMesures(){
         int originY = (tft.height() / 2) + 40;
         int tailleX = tft.width() / 2 - 15;
         int tailleY = 100;
-        sprintf(texte, "orig X=%d, orig Y=%d, taille X=%d, taille Y=%d", originX, originY, tailleX, tailleY);
-        Serial.println(texte);
+        //sprintf(texte, "orig X=%d, orig Y=%d, taille X=%d, taille Y=%d", originX, originY, tailleX, tailleY);
+        //Serial.println(texte);
         tft.drawRect(originX, originY, tailleX, tailleY, colorCadre);
         refreshMesures = false;
 
@@ -175,46 +205,77 @@ void displayMesures(){
 //=================================================
 void displayValeurs(){
     if (refreshCadreValeurs){
-        Serial.println("displayValeurs");
+        //Serial.println("displayValeurs");
         int colorCadre = _GREEN;
         int originX = 5;
         int originY = 30;
         int tailleX = tft.width() - 10;
         int tailleY = tft.height() / 2;
-        sprintf(texte, "orig X=%d, orig Y=%d, taille X=%d, taille Y=%d", originX, originY, tailleX, tailleY);
-        Serial.println(texte);
+        //sprintf(texte, "orig X=%d, orig Y=%d, taille X=%d, taille Y=%d", originX, originY, tailleX, tailleY);
+        //Serial.println(texte);
         tft.drawRect(originX, originY, tailleX, tailleY, colorCadre);
         //tft.fillRect(originX+1, originY+1, tailleX-1, tailleY-1, couleurFond);
 
         // display text
         int numLigne = 1;
+        int tmpX = originX + 10;
+        int tmpY = originY + (10 * numLigne++);
+
         int textSize = 4;
-        originX = originX + 10;
-        originY = originY + (10 * numLigne++);
-
         tft.setTextSize(textSize); 
-        tft.setCursor(originX,originY);
-        tft.setTextColor(_BLACK);
-        tft.print(oldHeure);
-        tft.setTextColor(_WHITE);
-        tft.setCursor(originX,originY);
-        strcpy(oldHeure,getHeureFormatee());
-        tft.println(getHeureFormatee()); 
+        tft.setCursor(tmpX,tmpY);
+        if (mesDonneesApi.heureModifiee){
+            //Serial.println("display.cpp => displayValeurs : display heure");
+            tft.setTextColor(_BLACK);
+            tft.print(oldHeure);
+            tft.setTextColor(_WHITE);
+            tft.setCursor(tmpX,tmpY);
+            strcpy(oldHeure,mesDonneesApi.heureFormatee);
+            tft.println(oldHeure); 
+            mesDonneesApi.heureModifiee = false;
+        }
 
-        originY = originY + ((textSize / 2) *  10 * numLigne++);
+        tmpY = tmpY + ((textSize / 2) *  10 * numLigne++);
         textSize = 3;
         tft.setTextSize(textSize); 
-        tft.setCursor(originX,originY);
-        tft.print(oldDate);
-        tft.setCursor(originX,originY);
-        strcpy(oldDate,getDateFormatee());
-        tft.println(getDateFormatee());
+        tft.setCursor(tmpX,tmpY);
+        if (mesDonneesApi.dateModifiee){
+            Serial.println("display.cpp => displayValeurs : display date");
+            tft.setTextColor(_BLACK);
+            tft.print(oldDate);
+            tft.setTextColor(_WHITE);
+            tft.setCursor(tmpX,tmpY);
+            strcpy(oldDate,mesDonneesApi.dateFormatee);
+            tft.println(oldDate);
+            mesDonneesApi.dateModifiee = false;
+        }
 
-        originY = originY + ((textSize / 2) *  10 * numLigne++);
+        tmpY = tmpY + ((textSize / 2) *  10 * numLigne++);
         textSize = 2;
         tft.setTextSize(textSize); 
-        tft.setCursor(originX,originY);
+        tft.setCursor(tmpX,tmpY);
         tft.println("taux d'humidite   : ");
+
+
+        tmpX = originX + 280;
+        tmpY = originY + 38;
+        textSize = 8;
+        char tmp[50];
+        tft.setTextSize(textSize); 
+        tft.setCursor(tmpX,tmpY);
+        if (mesDonneesApi.temperatureMesureeModifiee){
+            Serial.println("display.cpp => displayValeurs : temperature mesuree");
+            tft.setTextColor(_BLACK);
+            tft.print(oldTemperatureMesuree);
+            tft.setTextColor(_WHITE);
+            tft.setCursor(tmpX,tmpY);
+            int temperature = mesDonneesApi.temperatureMesuree;
+            sprintf(tmp, "%2d.%d", temperature/10, temperature%10);
+            strcpy(oldTemperatureMesuree,tmp);
+            tft.println(oldTemperatureMesuree);
+            mesDonneesApi.temperatureMesureeModifiee = false;
+        }
+
     }
 
 }
@@ -263,5 +324,28 @@ void initTft(){
 
     strcpy(oldHeure,"");
     strcpy(oldDate,"");
+
+    strcpy(oldHeure, "");
+    strcpy(oldDate, "");
+    strcpy(oldChauffageOnOff, "");
+    strcpy(oldWifiConnected, "");
     
+}
+
+
+
+
+//=================================================
+//
+//      refreshDisplay
+//
+//=================================================
+void refreshDisplay(void){
+    if (isDatasAvailables()){
+        resetDataAvailables();
+        displayTitle("Chauffage");
+        displayValeurs();
+        displayParametres();
+        displayMesures();
+    }
 }

@@ -22,8 +22,8 @@ int jour = 17;
 int jourSemaine;
 int mois = 2;
 int annee = 2021;
-char heureFormatee[100];
-char dateFormatee[100];
+//char heureFormatee[100];
+//char dateFormatee[100];
 unsigned long nbMillisecondUpdateHeure = 0;
 
 extern bool refreshCadreValeurs;
@@ -102,4 +102,5 @@ void refreshNtp(void){
     if ((millis() - ntpLastRefresh) > DELAY_REFRESH_NTP){
         refreshNtpNow();
     }
+    if (annee < 2000) refreshNtpNow();
 }

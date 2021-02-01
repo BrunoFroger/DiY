@@ -8,6 +8,7 @@
 #include <WiFi.h>
 
 #include "wifiTools.hpp"
+#include "api.hpp"
 
 char ipAdress[20];
 char wifiSsid[25];
@@ -39,15 +40,19 @@ void deconnecteWifi(){
 //          initWifi
 //
 //=========================================
-void initWifi(void){    // init wifi connection
+void initWifi(bool silence){    // init wifi connection
 
-    //Serial.println("initWifi => debut");
+    if (!silence){
+        Serial.println("initWifi => debut");
+    } else {
+        Serial.println("try wifi ....");
+    }
     delay(100);
     //Serial.println("initWifi => check wifi status");
-    if (WiFi.status() == WL_NO_SHIELD){
+    /*if (WiFi.status() == WL_NO_SHIELD){
         Serial.println("initWifi => ERROR : No shield detected !!");
         return;
-    }
+    }*/
     //Serial.println("initWifi => a shield is detected");
     delay(1000);
     //Serial.println("initWifi => set wifi mode to WIFI_STA : OK");
@@ -56,12 +61,12 @@ void initWifi(void){    // init wifi connection
     cptTryWifi = 0;
 
     // TODO mettre a jour avec les identifiants du serveur web central
-    strcpy(wifiSsid,"Gateway_chauffage");
-    strcpy(wifiPassword, "sdfhijsl5!qsd");
+    strcpy(wifiSsid,"gateway-chauffage");
+    strcpy(wifiPassword, "0296911369");
     
     // Connect to WiFi network
-    Serial.print("Connecting to ");
-    Serial.println(wifiSsid);
+    if (!silence) Serial.print("Connecting to ");
+    if (!silence) Serial.println(wifiSsid);
     WiFi.begin(wifiSsid, wifiPassword);
     int cpt=0;
     int cpt2=0;
@@ -70,31 +75,38 @@ void initWifi(void){    // init wifi connection
         //char tmp[10];
         //sprintf(tmp,"%d,",cpt);
         //Serial.print(tmp);
-        Serial.print(".");   //Typiquement 5 à 10 points avant la connexion
+        if (!silence) Serial.print(".");   //Typiquement 5 à 10 points avant la connexion
         if (cpt++ >= 5){
-            Serial.println();
+            if (!silence) Serial.println();
             cpt=0;
             WiFi.begin(wifiSsid, wifiPassword);
         }
         if (cpt2++ > 20){
-            cpt2=0;
-            cpt=0;
+            break;
         }
     }
-    Serial.println("");
-    wifiConnected = true;
-    Serial.println("WiFi connected");
+    if (cpt2 > 20){
+        if (!silence) Serial.println("Wifi non connecte");
+    } else {
+        Serial.println("");
+        wifiConnected = true;
+        if (!silence) Serial.println("WiFi connected");
+    }
 
     // Print the IP address
-    Serial.print("Use this URL to connect: ");
-    Serial.print("http://");
+    if (!silence) Serial.print("Use this URL to connect: ");
+    if (!silence) Serial.print("http://");
     IPAddress tmpIp = WiFi.localIP();
     sprintf(ipAdress,"%d.%d.%d.%d",tmpIp[0],tmpIp[1],tmpIp[2],tmpIp[3]);
     //Serial.print(WiFi.localIP());
-    Serial.print(ipAdress);
-    Serial.println("/");  //Utiliser cette URL sous Firefox de preference à Chrome
+    if (!silence) Serial.print(ipAdress);
+    if (!silence) Serial.println("/");  //Utiliser cette URL sous Firefox de preference à Chrome
 
-    //Serial.println("initWifi => fin");
+    IPAddress gatewayIp = WiFi.gatewayIP();
+    if (!silence) Serial.print("La gateway est : ");
+    if (!silence) Serial.println(gatewayIp.toString());
+    
+    if (!silence) Serial.println("initWifi => fin");
 }
 
 //=========================================
@@ -121,6 +133,13 @@ char *getIp(){
 //
 //=========================================
 boolean isWifiConnected(){
+    if (WiFi.status() == WL_CONNECTED) {
+        //Serial.println("wifiTools.cpp => isWifiConnected : TRUE");
+        wifiConnected = true;
+    } else {
+        //Serial.println("wifiTools.cpp => isWifiConnected : FALSE");
+        wifiConnected = false;
+    }
     //wifiConnected = (WiFi.status() == WL_CONNECTED);
     return wifiConnected;
 }
