@@ -105,11 +105,6 @@ void initApi(void){
 //          resetDataAvailables
 //
 //=========================================
-/*chauffageDatas *getDatas(void){
-    printf("api.cpp => getDatas\n");
-    afficheDatas();
-    return (&mesDonneesApi);
-}*/
 void resetDataAvailables(void){
     datasUpated = false;
 }
@@ -133,9 +128,6 @@ void updateHeure(void){
 
     if ((millis() - nbMillisecondUpdateHeure) >= 1000){
         nbMillisecondUpdateHeure = millis();
-        //Serial.println("api.cpp->updateHeure");
-
-        //Serial.println("Update Heure");
 
         second++;
         mesDonneesApi.heureModifiee = true;
@@ -264,7 +256,8 @@ void actualiseVariable(char *variable, char *valeur){
         if (tmp != mesDonneesApi.temperatureMesuree){
             mesDonneesApi.temperatureMesuree = tmp;
             mesDonneesApi.temperatureMesureeModifiee = true;
-            Serial.println("temperature mise a jour");
+            Serial.print("temperature mise a jour : ");
+            Serial.println(mesDonneesApi.temperatureMesuree);
         }
     } else if (strcmp(variable, "heure") == 0){
         //Serial.println("mise a jour heure");
@@ -321,6 +314,22 @@ void actualiseVariable(char *variable, char *valeur){
             jourSemaine = tmp;
             Serial.println("jourSemaine mise a jour");
             mesDonneesApi.dateModifiee = true;
+        }
+    } else if (strcmp(variable, "consigne") == 0){
+        //Serial.println("mise a jour consigne");
+        int tmp = atoi(valeur);
+        if (tmp != mesDonneesApi.consigne){
+            mesDonneesApi.consigne = tmp;
+            Serial.println("consigne mise a jour");
+            mesDonneesApi.parametresModifies = true;
+        }
+    } else if (strcmp(variable, "chauffageOnOff") == 0){
+        //Serial.println("mise a jour chauffageOnOff");
+        bool tmp = strcmp(valeur, "ON");
+        if (tmp != mesDonneesApi.chauffageOnOff){
+            mesDonneesApi.chauffageOnOff = tmp;
+            Serial.println("chauffageOnOff mise a jour");
+            mesDonneesApi.parametresModifies = true;
         }
     } else {
         Serial.print("couple variable=valeur invalide : <");

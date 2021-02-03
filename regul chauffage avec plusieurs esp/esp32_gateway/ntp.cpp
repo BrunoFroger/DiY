@@ -7,6 +7,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 
+#include "globalDatas.hpp"
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600 * 2, 60000);
@@ -14,14 +15,7 @@ char dayOfWeek[7][5] = {"dim", "lun", "mar", "mer", "jeu", "ven", "sam"};
 boolean heureEte, tmpHeureEte;
 int timeOffset;
 
-// parametre temps
-int second = 0;
-int minute = 25;
-int heure = 12;
-int jour = 17;
-int jourSemaine;
-int mois = 2;
-int annee = 2021;
+
 //char heureFormatee[100];
 //char dateFormatee[100];
 unsigned long nbMillisecondUpdateHeure = 0;
@@ -49,13 +43,13 @@ unsigned long ntpLastRefresh=-DELAY_REFRESH_NTP;
 void refreshNtpNow(void){
         //Serial.println("Refresh NTP");
         char tmp[50];
-        if (annee > 2000){
+        if (donneesGlobales.annee > 2000){
             // en France le passage à l'heure d'été obéis à la règle suivante :
             // Du dernier Dimanche de Mars au dernier Dimanche d'octobre on ajoute 60 minutes
             // L'heure du changement est 3h00 
-            if (mois > 10 || mois < 3 
-                || (mois == 10 && (jour - jourSemaine) > 22) 
-                || (mois == 3 && (jour - jourSemaine) < 24)){
+            if (donneesGlobales.mois > 10 || donneesGlobales.mois < 3 
+                || (donneesGlobales.mois == 10 && (donneesGlobales.jour - donneesGlobales.jourSemaine) > 22) 
+                || (donneesGlobales.mois == 3 && (donneesGlobales.jour - donneesGlobales.jourSemaine) < 24)){
                 // heure d'hiver
                 tmpHeureEte = false;
             } else {
@@ -78,17 +72,20 @@ void refreshNtpNow(void){
         //unsigned long epochTime = timeClient.getEpochTime();
         String formatedDate = timeClient.getFormattedDate();
         //Serial.println(formatedDate);
-        second = timeClient.getSeconds();
-        minute = timeClient.getMinutes();
-        heure = timeClient.getHours();
-        jourSemaine = timeClient.getDay();
+        donneesGlobales.second = timeClient.getSeconds();
+        donneesGlobales.minute = timeClient.getMinutes();
+        donneesGlobales.heure = timeClient.getHours();
+        donneesGlobales.jourSemaine = timeClient.getDay();
         //Serial.println(formatedDate.substring(8,10));
-        jour = formatedDate.substring(8,10).toInt();
+        donneesGlobales.jour = formatedDate.substring(8,10).toInt();
         //Serial.println(formatedDate.substring(5,7));
-        mois = formatedDate.substring(5,7).toInt();
+        donneesGlobales.mois = formatedDate.substring(5,7).toInt();
         //Serial.println(formatedDate.substring(0,4));
-        annee = formatedDate.substring(0,4).toInt();
-        sprintf(tmp,"Update NTP => %s %4d-%02d-%02d / %02d:%02d:%02d", dayOfWeek[jourSemaine], annee, mois, jour, heure, minute, second);
+        donneesGlobales.annee = formatedDate.substring(0,4).toInt();
+        sprintf(tmp,"Update NTP => %s %4d-%02d-%02d / %02d:%02d:%02d", 
+                    dayOfWeek[donneesGlobales.jourSemaine], donneesGlobales.annee, 
+                    donneesGlobales.mois, donneesGlobales.jour, donneesGlobales.heure, 
+                    donneesGlobales.minute, donneesGlobales.second);
         Serial.println(tmp);
         ntpLastRefresh=millis();
 }
@@ -102,5 +99,5 @@ void refreshNtp(void){
     if ((millis() - ntpLastRefresh) > DELAY_REFRESH_NTP){
         refreshNtpNow();
     }
-    if (annee < 2000) refreshNtpNow();
+    if (donneesGlobales.annee < 2000) refreshNtpNow();
 }

@@ -10,9 +10,13 @@
 
 #include "ntp.hpp"
 #include "temperature.hpp"
+#include "configPage.hpp"
+#include "globalDatas.hpp"
 
-String htmlHeader = "<body><h1>gateway chauffage</h1>";
-String htmlFooter = "</body></html>";
+String htmlStyleTable  = "HTTP/1.1 200 OK Content-Type: text/html<!DOCTYPE HTML><style> div {width: 100%;} table, th, td {padding: 10px;border: 1px solid black;border-collapse: collapse;}</style>";
+String htmlTitre       = "<h1>gateway chauffage</h1>";
+String htmlHeader      = htmlStyleTable + "<body><div>" + htmlTitre ;
+String htmlFooter      = "</div></body></html>";
 
 #define TAILLE_MESSAGE  1000
 String message = "";
@@ -25,6 +29,26 @@ String message = "";
 void sendMessage(WiFiClient client, String texte){
     client.println(texte);
     delay(2);
+}
+void sendHtmlHeader(WiFiClient client){
+    client.println("HTTP/1.1 200 OK ");
+    client.println("Content-Type: text/html");
+    client.println("");
+    client.println("<!DOCTYPE HTML>");
+    client.println("<style type=\"text/css\">");
+    client.println("    div {width: 100%;} ");
+    client.println("    table, th, td {padding: 10px;border: 1px solid black;border-collapse: collapse;}");
+    client.println("</style>");
+    client.println("<html>");
+    client.println("<head>");
+    client.println("    <title>Gateway chauffage</title>");
+    client.println("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no\" />");
+    client.println("    <meta charset=\"utf-8\" />");
+    client.println("    <link rel=\"icon\" href=\"data:,\">");
+    client.println("</head>");
+    client.println("<body>");
+    client.println("<div>");
+
 }
 
 //=================================================
@@ -40,61 +64,42 @@ void analyseHeader(WiFiClient client, String header){
         refreshNtpNow();
         delay(500);
         Serial.println("requete get Ntp traitee");
-        //client.println(htmlHeader);
-        //sprintf(tmp, "reponse getNtp");
-        //client.println(tmp);
-        message = "second=" + String(second);
+        message = "second=" + String(donneesGlobales.second);
         sendMessage(client, message);
-        message = "minute=" + String(minute);
+        message = "minute=" + String(donneesGlobales.minute);
         sendMessage(client, message);
-        message = "heure=" + String(heure);
+        message = "heure=" + String(donneesGlobales.heure);
         sendMessage(client, message);
-        message = "jour=" + String(jour);
+        message = "jour=" + String(donneesGlobales.jour);
         sendMessage(client, message);
-        message = "jourSemaine=" + String(jourSemaine);
+        message = "jourSemaine=" + String(donneesGlobales.jourSemaine);
         sendMessage(client, message);
-        message = "mois=" + String(mois);
+        message = "mois=" + String(donneesGlobales.mois);
         sendMessage(client, message);
-        message = "annee=" + String(annee);
+        message = "annee=" + String(donneesGlobales.annee);
         sendMessage(client, message);
-        /*
-        sprintf(tmp, "second=%d",second);
-        client.println(tmp);
-        sprintf(tmp, "minute=%d",minute);
-        client.println(tmp);
-        sprintf(tmp, "heure=%d",heure);
-        client.println(tmp);
-        sprintf(tmp, "jour=%d",jour);
-        client.println(tmp);
-        sprintf(tmp, "jourSemaine=%d",jourSemaine);
-        client.println(tmp);
-        sprintf(tmp, "mois=%d",mois);
-        client.println(tmp);
-        sprintf(tmp, "annee=%d",annee);
-        client.println(tmp);
-        */
-        //client.println(htmlFooter);
     } else if (header.indexOf("GET /getTemperature") >= 0) {
         Serial.println("requete get temperature traitee");
         message = "temperature=" + String(getTemperature());
         sendMessage(client, message);
-        //client.println(htmlHeader);
-        //sprintf(tmp, "reponse getTemperature");
-        //client.println(tmp);
-        //sprintf(tmp, "temperature=%d",getTemperature());
-        //client.println(tmp);
-        //client.println(htmlFooter);
+    } else if (header.indexOf("GET /config") >= 0) {
+        Serial.println("requete config");
+        sendConfigPage(client, header);
+    } else if (header.indexOf("GET /swichChauffageOnOff") >= 0) {
+        donneesGlobales.chauffageOnOff = !donneesGlobales.chauffageOnOff;
+        sendConfigPage(client, header);
+    } else if (header.indexOf("GET /incrementeConsigne") >= 0) {
+        donneesGlobales.consigne++;
+        sendConfigPage(client, header);
+    } else if (header.indexOf("GET /decrementeConsigne") >= 0) {
+        donneesGlobales.consigne--;
+        sendConfigPage(client, header);
     } else if (header.indexOf("GET / ") >= 0) {
         Serial.println("requete get vide traitee");
-        //client.println(htmlHeader);
         client.println("ca marche");
-        //client.println(htmlFooter);
     } else {
-        //client.println(htmlHeader);
         client.println("404 page inconnue");
-        //client.println(htmlFooter);
     }
-    //client.println();
 }
 
 

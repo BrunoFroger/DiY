@@ -4,7 +4,10 @@
 //
 //
 
-int temperatureCourante = 200;
+#include <Arduino.h>
+
+#include "globalDatas.hpp"
+
 
 //=========================================
 //
@@ -12,7 +15,9 @@ int temperatureCourante = 200;
 //
 //=========================================
 int getTemperature(void){
-    temperatureCourante = temperatureCourante + 1;
-    if (temperatureCourante > 210) temperatureCourante = 200;
-    return temperatureCourante;
+    donneesGlobales.temperature = donneesGlobales.temperature + 1;
+    if (donneesGlobales.temperature > 210) donneesGlobales.temperature = 200;
+    Serial.print("getTemperature => ");
+    Serial.println(donneesGlobales.temperature);
+    return donneesGlobales.temperature;
 }

@@ -12,6 +12,7 @@
 
 #include "ntp.hpp"
 #include "webRequest.hpp"
+#include "globalDatas.hpp"
 
 #define LOOP_DELAY 10
 
@@ -28,8 +29,6 @@ WiFiServer server(80);
 //String header;
 
 WiFiClient client;
-int nbConnectedClients=0;
-IPAddress myIpAddress;
 
 //=================================================
 //
@@ -49,12 +48,14 @@ void setup() {
     delay(1000);
     Serial.println("Serial initialized");
 
+    initGlobalDatas();
+
     Serial.print("Setting soft-AP ... ");
     boolean result = WiFi.softAP(ssid, password);
     if(result == true)
     {
         Serial.println("Ready");
-        myIpAddress = WiFi.softAPIP();
+        donneesGlobales.ipGateway = WiFi.softAPIP();
     }
     else
     {
@@ -65,7 +66,7 @@ void setup() {
     server.begin(); 
 
     Serial.print("Adresse IP de la Gateway : ");
-    Serial.println(myIpAddress);
+    Serial.println(donneesGlobales.ipGateway);
     initNtp();
 }
 
@@ -76,9 +77,9 @@ void setup() {
 //=================================================
 void loop(){
 
-    if (nbConnectedClients != WiFi.softAPgetStationNum()){
+    if (donneesGlobales.nbClientsConnectes != WiFi.softAPgetStationNum()){
         Serial.printf("Stations connected = %d\n", WiFi.softAPgetStationNum());
-        nbConnectedClients = WiFi.softAPgetStationNum();
+        donneesGlobales.nbClientsConnectes = WiFi.softAPgetStationNum();
     }
     client = server.available();
     if (client){
