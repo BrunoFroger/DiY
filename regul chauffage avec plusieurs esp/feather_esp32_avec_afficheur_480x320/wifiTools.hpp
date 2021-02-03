@@ -9,6 +9,7 @@
 
 extern WiFiClient wifiClient;
 extern WiFiServer wifiServer;
+extern IPAddress gatewayIp;
 
 extern void initWifi(bool silence);
 extern char *getSsid();

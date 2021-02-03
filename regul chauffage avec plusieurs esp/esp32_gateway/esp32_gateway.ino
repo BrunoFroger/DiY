@@ -82,10 +82,10 @@ void loop(){
     }
     client = server.available();
     if (client){
-        Serial.println("requete client recue");
+        //Serial.println("requete client recue");
         analyseRequete(client);
     }
     refreshNtp();
-    delay(3000);
+    delay(100);
 }
 

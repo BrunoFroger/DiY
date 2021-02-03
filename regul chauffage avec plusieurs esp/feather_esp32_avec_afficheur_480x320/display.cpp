@@ -63,7 +63,6 @@ int nbItemMenu = 2;
 char itemMenu[][20] = {"parametres", "set "};
 
 boolean refreshTitle = true;
-boolean refreshCadreValeurs = true;
 boolean refreshMesures = true;
 
 char texte[100];
@@ -104,7 +103,7 @@ void displayTitle(char *title){
 void displayParametres(){
     if (mesDonneesApi.parametresModifies){
         mesDonneesApi.parametresModifies = false;
-        Serial.println("displayParametres");
+        //Serial.println("displayParametres");
         int colorCadre = _YELLOW;
         int originX = 5;
         int originY = (tft.height() / 2) + 40;
@@ -174,7 +173,7 @@ void displayParametres(){
 //=================================================
 void displayMesures(){
     if (refreshMesures){
-        Serial.println("displayMesures");
+        //Serial.println("displayMesures");
         int colorCadre = _WHITE;
         int originX = tft.width() / 2 + 10;;
         int originY = (tft.height() / 2) + 40;
@@ -204,7 +203,11 @@ void displayMesures(){
 //
 //=================================================
 void displayValeurs(){
-    if (refreshCadreValeurs){
+    bool execModule = mesDonneesApi.heureModifiee || 
+                    mesDonneesApi.dateModifiee ||
+                    mesDonneesApi.temperatureMesureeModifiee;
+
+    if (execModule){
         //Serial.println("displayValeurs");
         int colorCadre = _GREEN;
         int originX = 5;
@@ -240,7 +243,7 @@ void displayValeurs(){
         tft.setTextSize(textSize); 
         tft.setCursor(tmpX,tmpY);
         if (mesDonneesApi.dateModifiee){
-            Serial.println("display.cpp => displayValeurs : display date");
+            //Serial.println("display.cpp => displayValeurs : display date");
             tft.setTextColor(_BLACK);
             tft.print(oldDate);
             tft.setTextColor(_WHITE);
@@ -264,7 +267,7 @@ void displayValeurs(){
         tft.setTextSize(textSize); 
         tft.setCursor(tmpX,tmpY);
         if (mesDonneesApi.temperatureMesureeModifiee){
-            Serial.println("display.cpp => displayValeurs : temperature mesuree");
+            //Serial.println("display.cpp => displayValeurs : temperature mesuree");
             tft.setTextColor(_BLACK);
             tft.print(oldTemperatureMesuree);
             tft.setTextColor(_WHITE);

@@ -18,6 +18,7 @@ boolean wifiConnected = false;
 boolean wifiFound = false;
 WiFiClient wifiClient;
 WiFiServer wifiServer(80);//Ecouter le port 80
+IPAddress gatewayIp;
 
 //=========================================
 //
@@ -102,10 +103,11 @@ void initWifi(bool silence){    // init wifi connection
     if (!silence) Serial.print(ipAdress);
     if (!silence) Serial.println("/");  //Utiliser cette URL sous Firefox de preference à Chrome
 
-    IPAddress gatewayIp = WiFi.gatewayIP();
+    //IPAddress gatewayIp = WiFi.gatewayIP();
+    gatewayIp = WiFi.gatewayIP();
     if (!silence) Serial.print("La gateway est : ");
     if (!silence) Serial.println(gatewayIp.toString());
-    
+
     if (!silence) Serial.println("initWifi => fin");
 }
 
