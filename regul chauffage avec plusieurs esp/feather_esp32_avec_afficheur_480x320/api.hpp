@@ -18,7 +18,9 @@ typedef struct {
     bool consigneModifiee;
     bool parametresModifies;
     bool chauffageOnOff;
+    int puissanceChauffage;
     bool WifiConnected;
+    bool refreshMesures;
 } chauffageDatas;
 
 extern chauffageDatas mesDonneesApi;

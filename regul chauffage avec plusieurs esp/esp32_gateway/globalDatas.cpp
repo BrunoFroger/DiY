@@ -30,6 +30,7 @@ void initGlobalDatas(void){
     // parametres de chauffage
     donneesGlobales.consigne = 200;
     donneesGlobales.chauffageOnOff = false;
+    donneesGlobales.puissanceChauffage = 0;
 
     // parametres reseau
     //ipGateway;

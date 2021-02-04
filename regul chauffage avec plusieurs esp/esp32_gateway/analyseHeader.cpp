@@ -28,6 +28,7 @@ String message = "";
 //=================================================
 void sendMessage(WiFiClient client, String texte){
     client.println(texte);
+    Serial.println("analyseHeader/sendMessage => " + texte);
     delay(2);
 }
 void sendHtmlHeader(WiFiClient client){
@@ -82,6 +83,18 @@ void analyseHeader(WiFiClient client, String header){
         Serial.println("requete get temperature traitee");
         message = "temperature=" + String(getTemperature());
         sendMessage(client, message);
+    } else if (header.indexOf("GET /getInfoChauffage") >= 0) {
+        Serial.println("requete get info chauffage traitee");
+        message = "puissanceChauffage=" + String(donneesGlobales.puissanceChauffage);
+        sendMessage(client, message);
+        message = "consigne=" + String(donneesGlobales.consigne);
+        sendMessage(client, message);
+        if (donneesGlobales.chauffageOnOff){
+            message = "chauffageOnOff=ON";
+        } else {
+            message = "chauffageOnOff=OFF";
+        }
+        sendMessage(client, message);
     } else if (header.indexOf("GET /config") >= 0) {
         Serial.println("requete config");
         sendConfigPage(client, header);
@@ -93,6 +106,12 @@ void analyseHeader(WiFiClient client, String header){
         sendConfigPage(client, header);
     } else if (header.indexOf("GET /decrementeConsigne") >= 0) {
         donneesGlobales.consigne--;
+        sendConfigPage(client, header);
+    } else if (header.indexOf("GET /incrementeChauffage") >= 0) {
+        donneesGlobales.puissanceChauffage++;
+        sendConfigPage(client, header);
+    } else if (header.indexOf("GET /decrementeChauffage") >= 0) {
+        donneesGlobales.puissanceChauffage--;
         sendConfigPage(client, header);
     } else if (header.indexOf("GET / ") >= 0) {
         Serial.println("requete get vide traitee");

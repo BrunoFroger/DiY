@@ -7,7 +7,6 @@
 
 #include <Arduino.h>
 
-#include "chauffage.hpp"
 #include "api.hpp"
 #include "wifiTools.hpp"
 #include "display.hpp"

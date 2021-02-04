@@ -29,6 +29,7 @@ typedef struct {
     // parametres de chauffage
     int consigne;
     bool chauffageOnOff;
+    int puissanceChauffage;
 
     // parametres reseau
     int nbClientsConnectes = 0;

@@ -111,6 +111,13 @@ void sendConfigPage(WiFiClient client, String header){
                 sendLigne("<td><a href= \"swichChauffageOnOff\">OFF</td>");
             }
         sendLigne("</tr>");
+        sendLigne("<tr>");
+            sendLigne("<td>puissance chauffage</td>");
+            sprintf(tmp, "<td>%d</td>", donneesGlobales.puissanceChauffage);
+            sendLigne(tmp);
+            sendLigne("<td><a href=\"/incrementeChauffage\">+</td>");
+            sendLigne("<td><a href=\"/decrementeChaufage\">-</td>");
+        sendLigne("</tr>");
     sendLigne("</table>");
 
     //-----------------------------

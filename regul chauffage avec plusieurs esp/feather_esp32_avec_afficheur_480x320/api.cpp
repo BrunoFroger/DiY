@@ -14,6 +14,7 @@
 #define     DELAY_REFRESH_TEST_WIFI     1000*30
 #define     DELAY_REFRESH_NTP           1000*60*60*2
 #define     DELAY_REFRESH_TEMPERATURE   1000*10
+#define     DELAY_REFRESH_DONNEE_CHAUFFAGE  1000*10
 
 int second = 0;
 int minute = 25;
@@ -26,6 +27,7 @@ unsigned long nbMillisecondUpdateHeure = 0;
 unsigned long nbMillisecondUpdateWifi = 0;
 unsigned long nbMillisecondUpdateNTP = 0;
 unsigned long nbMillisecondUpdateTemperature = 0;
+unsigned long nbMillisecondUpdateDonneesChauffage = 0;
 char dayOfWeek[7][5] = {"dim", "lun", "mar", "mer", "jeu", "ven", "sam"};
 bool datasUpated = false;
 chauffageDatas mesDonneesApi;
@@ -95,7 +97,7 @@ void initApi(void){
     mesDonneesApi.parametresModifies = true;
     mesDonneesApi.WifiConnected = isWifiConnected();
     mesDonneesApi.temperatureMesuree = 205;
-    mesDonneesApi.temperatureMesureeModifiee = true;
+    mesDonneesApi.refreshMesures = true;
 
     afficheDatas();
 }
@@ -244,18 +246,19 @@ void refreshNecessaire(char *variable){
 //
 //=========================================
 void actualiseVariable(char *variable, char *valeur){
-    //Serial.print("actualiseVariable => <");
-    //Serial.print(variable);
-    //Serial.print("> = <");
-    //Serial.print(valeur);
-    //Serial.print(">");
-    //Serial.println();
+    /*Serial.print("actualiseVariable => <");
+    Serial.print(variable);
+    Serial.print("> = <");
+    Serial.print(valeur);
+    Serial.print(">");
+    Serial.println();*/
     if (strcmp(variable, "temperature") == 0){
         //Serial.println("mise a jour temperature");
         int tmp = atoi(valeur);
         if (tmp != mesDonneesApi.temperatureMesuree){
             mesDonneesApi.temperatureMesuree = tmp;
             mesDonneesApi.temperatureMesureeModifiee = true;
+            mesDonneesApi.refreshMesures = true;
             Serial.print("temperature mise a jour : ");
             Serial.println(mesDonneesApi.temperatureMesuree);
         }
@@ -264,7 +267,8 @@ void actualiseVariable(char *variable, char *valeur){
         int tmp = atoi(valeur);
         if (tmp != heure){
             heure = tmp;
-            Serial.println("heure mise a jour");
+            Serial.print("heure mise a jour : ");
+            Serial.println(valeur);
             mesDonneesApi.heureModifiee = true;
         }
     } else if (strcmp(variable, "minute") == 0){
@@ -272,7 +276,8 @@ void actualiseVariable(char *variable, char *valeur){
         int tmp = atoi(valeur);
         if (tmp != minute){
             minute = tmp;
-            Serial.println("minute mise a jour");
+            Serial.print("minute mise a jour : ");
+            Serial.println(valeur);
             mesDonneesApi.heureModifiee = true;
         }
     } else if (strcmp(variable, "second") == 0){
@@ -280,7 +285,8 @@ void actualiseVariable(char *variable, char *valeur){
         int tmp = atoi(valeur);
         if (tmp != second){
             second = tmp;
-            Serial.println("second mise a jour");
+            Serial.print("second mise a jour : ");
+            Serial.println(valeur);
             mesDonneesApi.heureModifiee = true;
         }
     } else if (strcmp(variable, "annee") == 0){
@@ -288,7 +294,8 @@ void actualiseVariable(char *variable, char *valeur){
         int tmp = atoi(valeur);
         if (tmp != annee){
             annee = tmp;
-            Serial.println("annee mise a jour");
+            Serial.print("annee mise a jour : ");
+            Serial.println(valeur);
             mesDonneesApi.dateModifiee = true;
         }
     } else if (strcmp(variable, "mois") == 0){
@@ -296,7 +303,8 @@ void actualiseVariable(char *variable, char *valeur){
         int tmp = atoi(valeur);
         if (tmp != mois){
             mois = tmp;
-            Serial.println("mois mise a jour");
+            Serial.print("mois mise a jour : ");
+            Serial.println(valeur);
             mesDonneesApi.dateModifiee = true;
         }
     } else if (strcmp(variable, "jour") == 0){
@@ -304,7 +312,8 @@ void actualiseVariable(char *variable, char *valeur){
         int tmp = atoi(valeur);
         if (tmp != jour){
             jour = tmp;
-            Serial.println("jour mise a jour");
+            Serial.print("jour mise a jour : ");
+            Serial.println(valeur);
             mesDonneesApi.dateModifiee = true;
         }
     } else if (strcmp(variable, "jourSemaine") == 0){
@@ -312,7 +321,8 @@ void actualiseVariable(char *variable, char *valeur){
         int tmp = atoi(valeur);
         if (tmp != jourSemaine){
             jourSemaine = tmp;
-            Serial.println("jourSemaine mise a jour");
+            Serial.print("jourSemaine mise a jour : ");
+            Serial.println(valeur);
             mesDonneesApi.dateModifiee = true;
         }
     } else if (strcmp(variable, "consigne") == 0){
@@ -320,15 +330,27 @@ void actualiseVariable(char *variable, char *valeur){
         int tmp = atoi(valeur);
         if (tmp != mesDonneesApi.consigne){
             mesDonneesApi.consigne = tmp;
-            Serial.println("consigne mise a jour");
+            Serial.print("consigne mise a jour : ");
+            Serial.println(valeur);
+            mesDonneesApi.parametresModifies = true;
+        }
+    } else if (strcmp(variable, "puisssanceChauffage") == 0){
+        //Serial.println("mise a jour consigne");
+        int tmp = atoi(valeur);
+        if (tmp != mesDonneesApi.consigne){
+            mesDonneesApi.consigne = tmp;
+            Serial.print("consigne mise a jour : ");
+            Serial.println(valeur);
             mesDonneesApi.parametresModifies = true;
         }
     } else if (strcmp(variable, "chauffageOnOff") == 0){
-        //Serial.println("mise a jour chauffageOnOff");
-        bool tmp = strcmp(valeur, "ON");
+        Serial.println("api.cpp/actualiseVariable => mise a jour chauffageOnOff");
+        bool tmp;
+        if (strcmp(valeur, "ON") == 0) tmp = true; else tmp = false;
         if (tmp != mesDonneesApi.chauffageOnOff){
             mesDonneesApi.chauffageOnOff = tmp;
-            Serial.println("chauffageOnOff mise a jour");
+            Serial.print("chauffageOnOff mise a jour : ");
+            Serial.println(valeur);
             mesDonneesApi.parametresModifies = true;
         }
     } else {
@@ -381,16 +403,23 @@ void updateDatas(void){
         refreshNtp = 5000;
     }
     if ((millis() - nbMillisecondUpdateNTP) >= refreshNtp){     // update ntp
-        //Serial.println("api.cpp->updateDatas => refresh ntp");
+        Serial.println("api.cpp->updateDatas => refresh ntp");
         nbMillisecondUpdateNTP = millis();
         setGatewayrequest("getNtp");
         delay(1000);
     }
 
     if ((millis() - nbMillisecondUpdateTemperature) >= DELAY_REFRESH_TEMPERATURE){     // update temperature
-        //Serial.println("api.cpp->updateDatas => refresh temperature");
+        Serial.println("api.cpp->updateDatas => refresh temperature");
         nbMillisecondUpdateTemperature = millis();
         setGatewayrequest("getTemperature");
+        delay(100);
+    }
+
+    if ((millis() - nbMillisecondUpdateDonneesChauffage) >= DELAY_REFRESH_DONNEE_CHAUFFAGE){     // update temperature
+        Serial.println("api.cpp->updateDatas => refresh donnees chauffage");
+        nbMillisecondUpdateDonneesChauffage = millis();
+        setGatewayrequest("getInfoChauffage");
         delay(100);
     }
 
