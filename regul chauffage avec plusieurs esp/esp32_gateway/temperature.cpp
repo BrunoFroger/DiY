@@ -8,6 +8,7 @@
 
 #include "globalDatas.hpp"
 
+int coefPerteChauffage = 50;     // % de calcul de la perte de chauffage
 
 //=========================================
 //
@@ -15,23 +16,57 @@
 //
 //=========================================
 int getTemperatureSimulee(void){
-    int perte = 1;
+    int deltaTemperature;
     int deltaPuissance;
+    char tmp[200];
 
-
-    deltaPuissance = donneesGlobales.temperature - donneesGlobales.consigne;
+    Serial.println("------------------------------------");
+    Serial.println("getTemperature => debut");
+    deltaTemperature = donneesGlobales.consigne - donneesGlobales.temperature;
+    Serial.print("deltaTemperature = ");
+    Serial.println(deltaTemperature);
+    deltaPuissance = deltaTemperature  * donneesGlobales.puissanceChauffage / 100;
+    if (deltaPuissance == 0){
+        deltaPuissance = 1;
+    }
     // on calcule le changement de puissance du chauffage
-    If (deltaPuissance <= 0){
+    if (deltaTemperature >= 0){
+        Serial.println("on augmente le chauffage");
         // trop froid on allume la chaudiere
-        donneesGlobales.puissanceChauffage = true;
+        donneesGlobales.chauffageOnOff = true;
         // on augmente la puissance de la chaudiere
-        donneesGlobales.puissanceChauffage += deltapuissance;
+        Serial.print("deltaPuissance = ");
+        Serial.println(deltaPuissance);
+        donneesGlobales.puissanceChauffage += deltaPuissance;
         if (donneesGlobales.puissanceChauffage >= 100){
             donneesGlobales.puissanceChauffage = 100;
         }
     } else { // il fait trop chaud, on reduit le chauffage
-        donneesGlobales.puissanceChauffage -= deltapuissance;
+        Serial.println("on diminue le chauffage");
+        donneesGlobales.puissanceChauffage += deltaPuissance;
+        if (donneesGlobales.puissanceChauffage <= 0){
+            donneesGlobales.chauffageOnOff = false;
+            donneesGlobales.puissanceChauffage = 0;
+        }
     }
+
+    // on applique le chaufage a la temperature
+    int variationTemperature = donneesGlobales.puissanceChauffage / 10;
+
+    // on applique la baisse de temperature vis a vis de l'exterieur
+    int deltaTempExt = (donneesGlobales.temperature - donneesGlobales.temperatureExterieure) * coefPerteChauffage /100;
+    variationTemperature -= deltaTempExt;
+    if (donneesGlobales.temperature <= donneesGlobales.temperatureExterieure){
+        donneesGlobales.temperature = donneesGlobales.temperatureExterieure;
+    }
+
+    donneesGlobales.temperature += variationTemperature;
+    Serial.print("variation temperature : ");
+    Serial.println(variationTemperature);
+
+    sprintf(tmp,"getTemperature => on/off=%d, puissance=%d, temperature=%d", donneesGlobales.chauffageOnOff, donneesGlobales.puissanceChauffage, donneesGlobales.temperature);
+    Serial.println(tmp);
+    return donneesGlobales.temperature;
 }
 
 
@@ -41,6 +76,7 @@ int getTemperatureSimulee(void){
 //
 //=========================================
 int getTemperatureMesuree(void){
+    return donneesGlobales.temperature;
 }
 
 
@@ -65,19 +101,20 @@ int getTemperatureRampe(void){
 //
 //=========================================
 int getTemperature(void){
-    int mode = 1;
+    int mode = 2;
     switch (mode){
-        1:
+        case 1:
             return getTemperatureRampe();
             break;
-        2:
-            return getTemeratureSimulee(void);
+        case 2:
+            return getTemperatureSimulee();
             break;
-        3:
-            return getTemeratureMesuree(void);
+        case 3:
+            return getTemperatureMesuree();
             break;
         default:
-            Serial.println("mode de calcul de la temperature inconnu")
+            Serial.println("mode de calcul de la temperature inconnu");
     }
+    return donneesGlobales.temperature;
 }
 

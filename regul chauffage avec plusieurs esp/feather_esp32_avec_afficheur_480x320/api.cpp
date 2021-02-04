@@ -14,8 +14,10 @@
 // il ne faut pas que deux delay aient la meme valeur
 #define     DELAY_REFRESH_TEST_WIFI     1000*30
 #define     DELAY_REFRESH_NTP           1000*60*60*2
-#define     DELAY_REFRESH_TEMPERATURE   1000*8
-#define     DELAY_REFRESH_DONNEE_CHAUFFAGE  1000*10
+//#define     DELAY_REFRESH_TEMPERATURE   1000*8
+#define     DELAY_REFRESH_TEMPERATURE   1000*5/2
+//#define     DELAY_REFRESH_DONNEE_CHAUFFAGE  1000*10
+#define     DELAY_REFRESH_DONNEE_CHAUFFAGE  1000*2
 
 int second = 0;
 int minute = 25;

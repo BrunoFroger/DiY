@@ -24,7 +24,8 @@ typedef struct {
     int annee = 2010;
 
     // parametres temperature (en dixieme de degres)
-    int temperature = 200;
+    int temperature = 180;
+    int temperatureExterieure = 150;
 
     // parametres de chauffage
     int consigne;
