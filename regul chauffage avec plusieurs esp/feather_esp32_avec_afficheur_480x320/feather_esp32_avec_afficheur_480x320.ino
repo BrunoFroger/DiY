@@ -13,6 +13,9 @@
 
 
 #define LOOP_DELAY 10
+#define REFRESH_DELAY_AFFICHAGE_DATAS   1000*10
+
+int nbMillisecondAffichageDatas = 0;
 
 //=================================================
 //
@@ -59,6 +62,12 @@ void loop(){
 
     refreshDisplay();
     updateDatas();
+
+    //nbMillisecondAffichageDatas = millis();     // on desactive le refresh pour le moment
+    if ((millis() - nbMillisecondAffichageDatas) >= REFRESH_DELAY_AFFICHAGE_DATAS){
+        afficheDatas();
+        nbMillisecondAffichageDatas = millis(); 
+    }
 
     delay(LOOP_DELAY);
 

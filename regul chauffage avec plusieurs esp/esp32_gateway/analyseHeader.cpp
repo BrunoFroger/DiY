@@ -23,7 +23,7 @@ String message = "";
 
 //=================================================
 //
-//      buildMessage
+//      sendMessage
 //
 //=================================================
 void sendMessage(WiFiClient client, String texte){
@@ -31,6 +31,12 @@ void sendMessage(WiFiClient client, String texte){
     Serial.println("analyseHeader/sendMessage => " + texte);
     delay(2);
 }
+
+//=================================================
+//
+//      sendHtmlHeader
+//
+//=================================================
 void sendHtmlHeader(WiFiClient client){
     client.println("HTTP/1.1 200 OK ");
     client.println("Content-Type: text/html");
@@ -112,6 +118,9 @@ void analyseHeader(WiFiClient client, String header){
         sendConfigPage(client, header);
     } else if (header.indexOf("GET /decrementeChauffage") >= 0) {
         donneesGlobales.puissanceChauffage--;
+        sendConfigPage(client, header);
+    } else if (header.indexOf("GET /updateNtp") >= 0) {
+        refreshNtpNow();
         sendConfigPage(client, header);
     } else if (header.indexOf("GET / ") >= 0) {
         Serial.println("requete get vide traitee");

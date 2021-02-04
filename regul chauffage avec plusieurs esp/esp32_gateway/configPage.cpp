@@ -39,6 +39,7 @@ void sendConfigPage(WiFiClient client, String header){
     sendLigne("<h1>Gateway chauffage</h1>");
     sendLigne("<br>");
     sendLigne("<p>Donnees NTP (derniere mise a jour)</p>");
+    sendLigne("<p><a href=\"/updateNtp\">update NTP</a></p>");
     sendLigne("<table>");
         sendLigne("<tr>");
             sendLigne("<th>variable</th>");

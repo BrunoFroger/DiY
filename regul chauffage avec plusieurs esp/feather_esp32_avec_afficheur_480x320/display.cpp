@@ -85,8 +85,8 @@ char oldPuissance[50];
 //=================================================
 void displayTitle(char *title){
     if (refreshTitle){
-        Serial.print("displayTitle : ");
-        Serial.println(title);
+        //Serial.print("displayTitle : ");
+        //Serial.println(title);
         tft.setCursor(15,0);
         tft.setTextColor(_RED);
         tft.setTextSize(3); 
@@ -102,8 +102,9 @@ void displayTitle(char *title){
 //=================================================
 void displayParametres(){
     if (mesDonneesApi.parametresModifies){
+        char tmp[200];
         mesDonneesApi.parametresModifies = false;
-        Serial.println("display.cpp => displayParametres");
+        //Serial.println("display.cpp => displayParametres");
         int colorCadre = _YELLOW;
         int originX = 5;
         int originY = (tft.height() / 2) + 40;
@@ -116,7 +117,6 @@ void displayParametres(){
         // display text
         int numLigne = 1;
         int textSize = 2;
-        char tmp[50];
 
         originX = originX + 10;
         originY = originY + (10 * numLigne++);
@@ -124,44 +124,47 @@ void displayParametres(){
         tft.setTextSize(textSize); 
         tft.println("Parametres");
         
+
+        //sprintf(tmp, "display.cpp => displayParametres consigne=%d, chauffage=%d, wifi=%d", mesDonneesApi.consigne, mesDonneesApi.chauffageOnOff, mesDonneesApi.WifiConnected);
+        //Serial.println(tmp);
+
         originY = originY + (textSize * 10);
         tft.setCursor(originX, originY);
-        tft.print("Consigne : ");
         tft.setTextColor(_BLACK);
         tft.println(oldConsigne);
-        tft.setTextColor(_WHITE);
         sprintf(tmp,"Consigne : %d.%d", mesDonneesApi.consigne/10, mesDonneesApi.consigne%10);
-        tft.setCursor(originX, originY);
-        tft.println(tmp);
         strcpy(oldConsigne, tmp);
+        tft.setCursor(originX, originY);
+        tft.setTextColor(_WHITE);
+        tft.println(oldConsigne);
 
         originY = originY + (textSize * 10);
         tft.setCursor(originX, originY);
         tft.setTextColor(_BLACK);
         tft.println(oldChauffageOnOff);
-        tft.setTextColor(_WHITE);
         if (mesDonneesApi.chauffageOnOff){
             sprintf(tmp, "Chauffage: ON");
         } else {
             sprintf(tmp, "Chauffage: OFF");
         }
-        tft.setCursor(originX, originY);
-        tft.println(tmp);
         strcpy(oldChauffageOnOff,tmp);
+        tft.setCursor(originX, originY);
+        tft.setTextColor(_WHITE);
+        tft.println(oldChauffageOnOff);
 
         originY = originY + (textSize * 10);
         tft.setCursor(originX, originY);
         tft.setTextColor(_BLACK);
         tft.println(oldWifiConnected);
-        tft.setTextColor(_WHITE);
         if (mesDonneesApi.WifiConnected){
             sprintf(tmp, "Wifi     : Oui");
         } else {
             sprintf(tmp, "Wifi     : Non");
         }
-        tft.setCursor(originX, originY);
-        tft.println(tmp);
         strcpy(oldWifiConnected,tmp);
+        tft.setCursor(originX, originY);
+        tft.setTextColor(_WHITE);
+        tft.println(oldWifiConnected);
     }
 }
 
@@ -246,8 +249,8 @@ void displayValeurs(){
         tft.setTextSize(textSize); 
         tft.setCursor(tmpX,tmpY);
         if (mesDonneesApi.heureModifiee){
-            Serial.print("display.cpp => displayValeurs : display heure : ");
-            Serial.println(mesDonneesApi.heureFormatee);
+            //Serial.print("display.cpp => displayValeurs : display heure : ");
+            //Serial.println(mesDonneesApi.heureFormatee);
             tft.setTextColor(_BLACK);
             tft.print(oldHeure);
             tft.setTextColor(_WHITE);
@@ -262,8 +265,8 @@ void displayValeurs(){
         tft.setTextSize(textSize); 
         tft.setCursor(tmpX,tmpY);
         if (mesDonneesApi.dateModifiee){
-            Serial.print("display.cpp => displayValeurs : display date : ");
-            Serial.println(mesDonneesApi.dateFormatee);
+            //Serial.print("display.cpp => displayValeurs : display date : ");
+            //Serial.println(mesDonneesApi.dateFormatee);
             tft.setTextColor(_BLACK);
             tft.print(oldDate);
             tft.setTextColor(_WHITE);
@@ -287,8 +290,8 @@ void displayValeurs(){
         tft.setTextSize(textSize); 
         tft.setCursor(tmpX,tmpY);
         if (mesDonneesApi.temperatureMesureeModifiee){
-            Serial.print("display.cpp => displayValeurs : temperature mesuree : ");
-            Serial.println(mesDonneesApi.temperatureMesuree);
+            //Serial.print("display.cpp => displayValeurs : temperature mesuree : ");
+            //Serial.println(mesDonneesApi.temperatureMesuree);
             tft.setTextColor(_BLACK);
             tft.print(oldTemperatureMesuree);
             tft.setTextColor(_WHITE);
@@ -299,9 +302,7 @@ void displayValeurs(){
             tft.println(tmp);
             mesDonneesApi.temperatureMesureeModifiee = false;
         }
-
     }
-
 }
 
 //=================================================
