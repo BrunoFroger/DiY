@@ -12,7 +12,7 @@
 extern String htmlHeader;
 extern String htmlFooter;
 
-extern void analyseHeader(WiFiClient client, String header);
+extern void analyseHeader(WiFiClient client, String header, char *adresseIpClient);
 extern void sendMessage(WiFiClient client, String texte);
 extern void sendHtmlHeader(WiFiClient client);
 

@@ -1,0 +1,7 @@
+configuration de l'IDE Arduino pour televerser ce code
+
+- type de carte : ESP 8266 Boards (2,7,4) / LOLIN(WEMOS) D1 R2 & mini
+- port : /dev/cu.usbserial-xxxxx
+
+
+configuration cablage du potentiometre de simulation de temperature

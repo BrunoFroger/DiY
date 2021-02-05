@@ -103,6 +103,8 @@ void sendConfigPage(WiFiClient client, String header){
             sendLigne("<td>temperature mesureee</td>");
             sprintf(tmp, "<td>%d.%d</td>", donneesGlobales.temperature/10, donneesGlobales.temperature%10);
             sendLigne(tmp);
+            sendLigne("<td></td>");
+            sendLigne("<td></td>");
         sendLigne("</tr>");
         sendLigne("<tr>");
             sendLigne("<td>chauffage on/off</td>");
@@ -111,13 +113,30 @@ void sendConfigPage(WiFiClient client, String header){
             } else {
                 sendLigne("<td><a href= \"swichChauffageOnOff\">OFF</td>");
             }
+            sendLigne("<td></td>");
+            sendLigne("<td></td>");
         sendLigne("</tr>");
         sendLigne("<tr>");
             sendLigne("<td>puissance chauffage</td>");
-            sprintf(tmp, "<td>%d</td>", donneesGlobales.puissanceChauffage);
-            sendLigne(tmp);
+            sprintf(tmp, "<td>%d</td>", donneesGlobales.puissanceChauffage); sendLigne(tmp);
             sendLigne("<td><a href=\"/incrementeChauffage\">+</td>");
             sendLigne("<td><a href=\"/decrementeChaufage\">-</td>");
+        sendLigne("</tr>");
+        sendLigne("<tr>");
+            sendLigne("<td>mode verbose on/off</td>");
+            if (donneesGlobales.modeVerbose){
+                sendLigne("<td><a href= \"swichVerbose\">ON</td>");
+            } else {
+                sendLigne("<td><a href= \"swichVerbose\">OFF</td>");
+            }
+            sendLigne("<td></td>");
+            sendLigne("<td></td>");
+        sendLigne("</tr>");
+        sendLigne("<tr>");
+            sendLigne("<td>mode calcul temperature</td>");
+            sprintf(tmp, "<td>%d</td>", donneesGlobales.modeCalculTemperature); sendLigne(tmp);
+            sendLigne("<td><a href= \"incrementeModeCalculTemperature\">+</td>");
+            sendLigne("<td><a href= \"derementeModeCalculTemperature\">-</td>");
         sendLigne("</tr>");
     sendLigne("</table>");
 

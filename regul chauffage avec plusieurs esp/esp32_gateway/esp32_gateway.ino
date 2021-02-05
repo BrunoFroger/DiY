@@ -6,7 +6,6 @@
 
 #include <Arduino.h>
 
-
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
@@ -83,8 +82,10 @@ void loop(){
     }
     client = server.available();
     if (client){
-        //Serial.println("requete client recue");
-        analyseRequete(client);
+        char adresseIpClient[20];
+        IPAddress ipClient = client.remoteIP();
+        sprintf(adresseIpClient,"%d.%d.%d.%d",ipClient[0],ipClient[1],ipClient[2],ipClient[3]);
+        analyseRequete(client,adresseIpClient);
     }
     refreshNtp();
     delay(100);

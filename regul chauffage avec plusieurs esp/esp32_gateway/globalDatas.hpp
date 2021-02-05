@@ -40,6 +40,10 @@ typedef struct {
     char nomAfficheur[50];
     IPAddress ipPilotageChaudiere;
     char nomPilotageChaudiere[50];
+
+    // autres parametres
+    bool modeVerbose = false;
+    int modeCalculTemperature = 1;
 } typeGlobalDatas;
 
 

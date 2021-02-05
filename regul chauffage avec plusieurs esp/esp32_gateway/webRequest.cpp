@@ -18,7 +18,7 @@ String header = "";
 //      analyseRequete
 //
 //=================================================
-void analyseRequete(WiFiClient client){
+void analyseRequete(WiFiClient client, char *adresseIpClient){
     if (client){
         String currentLine = "";           // read a byte, then
         header = "";
@@ -29,7 +29,7 @@ void analyseRequete(WiFiClient client){
                 header += car;
                 if (car == '\n') { 
                     if (currentLine.length() == 0) {
-                        analyseHeader(client, header);
+                        analyseHeader(client, header, adresseIpClient);
                         break;
                     }  else { // if you got a newline, then clear currentLine
                         currentLine = "";

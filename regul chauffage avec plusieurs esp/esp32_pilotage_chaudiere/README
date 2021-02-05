@@ -1,4 +1,0 @@
-configuration de l'IDE Arduino pour televerser ce code
-
-- type de carte : LOLIN(WEMOS) D1 R1 & mini
-- port : /dev/cu.usbserial-xxxxx

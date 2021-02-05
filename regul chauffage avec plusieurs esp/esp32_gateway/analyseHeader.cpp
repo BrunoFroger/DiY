@@ -23,12 +23,21 @@ String message = "";
 
 //=================================================
 //
+//      setName
+//
+//=================================================
+void setName(char *header, char *adresseIpClient){
+    
+}
+
+//=================================================
+//
 //      sendMessage
 //
 //=================================================
 void sendMessage(WiFiClient client, String texte){
     client.println(texte);
-    Serial.println("analyseHeader/sendMessage => " + texte);
+    if (donneesGlobales.modeVerbose) Serial.println("analyseHeader/sendMessage => " + texte);
     delay(2);
 }
 
@@ -63,14 +72,14 @@ void sendHtmlHeader(WiFiClient client){
 //      analyseHeader
 //
 //=================================================
-void analyseHeader(WiFiClient client, String header){
+void analyseHeader(WiFiClient client, String header, char *adresseIpClient){
     char tmp[200];
     message = "";
-    //Serial.println("analyseHeader : " + header);
+    //if (donneesGlobales.modeVerbose) Serial.println("analyseHeader : " + header);
     if (header.indexOf("GET /getNtp") >= 0) {
         refreshNtpNow();
         delay(500);
-        Serial.println("requete get Ntp traitee");
+        if (donneesGlobales.modeVerbose) Serial.println("requete get Ntp traitee");
         message = "second=" + String(donneesGlobales.second);
         sendMessage(client, message);
         message = "minute=" + String(donneesGlobales.minute);
@@ -86,11 +95,12 @@ void analyseHeader(WiFiClient client, String header){
         message = "annee=" + String(donneesGlobales.annee);
         sendMessage(client, message);
     } else if (header.indexOf("GET /getTemperature") >= 0) {
-        Serial.println("requete get temperature traitee");
+        if (donneesGlobales.modeVerbose) Serial.println("requete get temperature traitee");
         message = "temperature=" + String(getTemperature());
         sendMessage(client, message);
+        if (donneesGlobales.modeVerbose) Serial.println(message);
     } else if (header.indexOf("GET /getInfoChauffage") >= 0) {
-        Serial.println("requete get info chauffage traitee");
+        if (donneesGlobales.modeVerbose) Serial.println("requete get info chauffage traitee");
         message = "puissanceChauffage=" + String(donneesGlobales.puissanceChauffage);
         sendMessage(client, message);
         message = "consigne=" + String(donneesGlobales.consigne);
@@ -102,7 +112,7 @@ void analyseHeader(WiFiClient client, String header){
         }
         sendMessage(client, message);
     } else if (header.indexOf("GET /config") >= 0) {
-        Serial.println("requete config");
+        if (donneesGlobales.modeVerbose) Serial.println("requete config");
         sendConfigPage(client, header);
     } else if (header.indexOf("GET /swichChauffageOnOff") >= 0) {
         donneesGlobales.chauffageOnOff = !donneesGlobales.chauffageOnOff;
@@ -116,15 +126,28 @@ void analyseHeader(WiFiClient client, String header){
     } else if (header.indexOf("GET /incrementeChauffage") >= 0) {
         donneesGlobales.puissanceChauffage++;
         sendConfigPage(client, header);
-    } else if (header.indexOf("GET /decrementeChauffage") >= 0) {
-        donneesGlobales.puissanceChauffage--;
+    } else if (header.indexOf("GET /decrementeConsigne") >= 0) {
+        donneesGlobales.consigne--;
+        sendConfigPage(client, header);
+    } else if (header.indexOf("GET /incrementeModeCalculTemperature") >= 0) {
+        donneesGlobales.modeCalculTemperature++;
+        if (donneesGlobales.modeCalculTemperature > 3) donneesGlobales.modeCalculTemperature = 1;
+        sendConfigPage(client, header);
+    } else if (header.indexOf("GET /derementeModeCalculTemperature") >= 0) {
+        donneesGlobales.modeCalculTemperature--;
+        if (donneesGlobales.modeCalculTemperature < 1) donneesGlobales.modeCalculTemperature = 3;
         sendConfigPage(client, header);
     } else if (header.indexOf("GET /updateNtp") >= 0) {
         refreshNtpNow();
         sendConfigPage(client, header);
     } else if (header.indexOf("GET / ") >= 0) {
-        Serial.println("requete get vide traitee");
+        if (donneesGlobales.modeVerbose) Serial.println("requete get vide traitee");
         client.println("ca marche");
+    } else if (header.indexOf("GET /swichVerbose") >= 0) {
+        donneesGlobales.modeVerbose = !donneesGlobales.modeVerbose;
+        sendConfigPage(client, header);
+    } else if (header.indexOf("GET /setName") >= 0) {
+        setName(header, adresseIpClient);
     } else {
         client.println("404 page inconnue");
     }

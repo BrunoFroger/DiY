@@ -1,21 +1,26 @@
 //
 //
-//  ESP 32 Fether avec afficheur 480 x 320.ino
+//  ESP 32 Wemos pilotages capteurs
 //
 //
-
 
 #include <Arduino.h>
 
-#include "api.hpp"
+#include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
+
 #include "wifiTools.hpp"
-#include "display.hpp"
 
+#define LOOP_DELAY 100
 
-#define LOOP_DELAY 10
-#define REFRESH_DELAY_AFFICHAGE_DATAS   1000*10
+// Replace with your network credentials
+const char* ssid     = "gateway-chauffage";
+const char* password = "0296911369";
+const char* espName = "Capteurs"
 
-int nbMillisecondAffichageDatas = 0;
+const int entreeAnalogique = A0;
+int valeurLue = 0;
+char buffer[200];
 
 //=================================================
 //
@@ -35,17 +40,12 @@ void setup() {
     delay(1000);
     Serial.println("Serial initialized");
 
-    Serial.println("---------------------------");
-    Serial.println("start initTft");
-    initTft();
-    Serial.println("start initTft");
-
+    /*
     Serial.println("---------------------------");
     Serial.println("start initWifi");
     initWifi(false);
     Serial.println("end initWifi");
-
-    initApi();
+    */
 
     Serial.println("end of setup");
   
@@ -60,15 +60,10 @@ void setup() {
 void loop(){ 
     //Serial.println("boucle principale");
 
-    refreshDisplay();
-    updateDatas();
-
-    //nbMillisecondAffichageDatas = millis();     // on desactive le refresh pour le moment
-    if ((millis() - nbMillisecondAffichageDatas) >= REFRESH_DELAY_AFFICHAGE_DATAS){
-        //afficheDatas();
-        nbMillisecondAffichageDatas = millis(); 
-    }
+    valeurLue = map(analogRead(entreeAnalogique),0,1024,10,30);
+    sprintf(buffer, "valeur lue = %d", valeurLue); Serial.println(buffer);
 
     delay(LOOP_DELAY);
 
 }
+
