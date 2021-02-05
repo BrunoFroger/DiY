@@ -26,8 +26,11 @@ String message = "";
 //      setName
 //
 //=================================================
-void setName(char *header, char *adresseIpClient){
-    
+void setName(String header, char *adresseIpClient){
+    char buffer[200];
+    char tmp[100];
+    header.toCharArray(tmp,100);
+    sprintf(buffer,"analyseHeader/setName => header = %s", tmp); Serial.println(buffer);
 }
 
 //=================================================
@@ -147,6 +150,7 @@ void analyseHeader(WiFiClient client, String header, char *adresseIpClient){
         donneesGlobales.modeVerbose = !donneesGlobales.modeVerbose;
         sendConfigPage(client, header);
     } else if (header.indexOf("GET /setName") >= 0) {
+        Serial.println("SetNom recu");
         setName(header, adresseIpClient);
     } else {
         client.println("404 page inconnue");

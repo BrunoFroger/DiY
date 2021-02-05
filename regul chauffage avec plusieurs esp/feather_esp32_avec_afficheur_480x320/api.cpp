@@ -109,7 +109,8 @@ void initApi(void){
 
     afficheDatas();
     char buffer[100];
-    sprintf(buffer, "setName&nom=afficheur");
+    Serial.println("envoi du nom de l'esp a la gateway");
+    sprintf(buffer, "setName?nom=afficheur");
     setGatewayrequest(buffer);
 }
 

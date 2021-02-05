@@ -16,7 +16,7 @@
 // Replace with your network credentials
 const char* ssid     = "gateway-chauffage";
 const char* password = "0296911369";
-const char* espName = "Capteurs"
+const char* espName = "Capteurs";
 
 const int entreeAnalogique = A0;
 int valeurLue = 0;
