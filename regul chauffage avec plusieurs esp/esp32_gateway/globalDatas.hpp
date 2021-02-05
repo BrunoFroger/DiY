@@ -34,11 +34,11 @@ typedef struct {
 
     // parametres reseau
     int nbClientsConnectes = 0;
-    IPAddress ipGateway;
+    char ipGateway[50];
     char nomGateway[50];
-    IPAddress ipAfficheur;
+    char ipAfficheur[50];
     char nomAfficheur[50];
-    IPAddress ipPilotageChaudiere;
+    char ipPilotageChaudiere[50];
     char nomPilotageChaudiere[50];
 
     // autres parametres

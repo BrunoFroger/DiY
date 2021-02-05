@@ -34,5 +34,6 @@ extern bool isDatasAvailables(void);
 extern void resetDataAvailables(void);
 extern void initApi(void);
 extern void afficheDatas(void);
+extern void setGatewayrequest(char *requete);
 
 #endif

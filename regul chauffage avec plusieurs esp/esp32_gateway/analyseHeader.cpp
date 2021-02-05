@@ -26,11 +26,33 @@ String message = "";
 //      setName
 //
 //=================================================
-void setName(String header, char *adresseIpClient){
+void setName(WiFiClient client, String header, char *adresseIpClient){
     char buffer[200];
     char tmp[100];
     header.toCharArray(tmp,100);
-    sprintf(buffer,"analyseHeader/setName => header = %s", tmp); Serial.println(buffer);
+    //sprintf(buffer,"analyseHeader/setName => header = %s", tmp); Serial.println(buffer);
+    char *index = strstr(tmp, "nom=");
+    ///Serial.println(index);
+    char *index2 = strstr(tmp, " HTTP/1.1");
+    index2[0] ='\0';
+    index += 4;
+    char adresseIp[20];
+    char nom[20];
+    IPAddress ipRemote = client.remoteIP();
+    strcpy(nom, index);
+    sprintf(adresseIp, "%d.%d.%d.%d", ipRemote[0], ipRemote[1], ipRemote[2], ipRemote[3]);
+    sprintf(tmp, "adresse IP = <%s>", adresseIp); Serial.println(tmp);
+    sprintf(tmp, "nom = <%s>", nom); Serial.println(tmp);
+    if (strcmp(nom, "afficheur") == 0) {
+        strcpy(donneesGlobales.nomAfficheur, nom);
+        strcpy(donneesGlobales.ipAfficheur, adresseIp);
+    } else if (strcmp(nom, "capteurs") == 0) {
+        strcpy(donneesGlobales.nomPilotageChaudiere, nom);
+        strcpy(donneesGlobales.ipPilotageChaudiere, adresseIp);
+    } else {
+        sprintf(buffer, "nom d'esp inconnu (%s) a l'adresse %s", nom, adresseIp); Serial.println(buffer);
+    }
+    //Serial.println(index);
 }
 
 //=================================================
@@ -151,9 +173,12 @@ void analyseHeader(WiFiClient client, String header, char *adresseIpClient){
         sendConfigPage(client, header);
     } else if (header.indexOf("GET /setName") >= 0) {
         Serial.println("SetNom recu");
-        setName(header, adresseIpClient);
+        setName(client, header, adresseIpClient);
     } else {
-        client.println("404 page inconnue");
+        char buffer[200];
+        header.toCharArray(buffer,200);
+        sprintf(tmp, "404 page inconnue (%s)", buffer); client.println(tmp);
+        Serial.println(tmp);
     }
 }
 

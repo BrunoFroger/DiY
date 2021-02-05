@@ -76,20 +76,18 @@ void afficheDatas(void){
 //
 //=========================================
 void setGatewayrequest(char *requete){
+    char tmp[200];
     if (WiFi.status() == WL_CONNECTED){
-        char tmp[100];
         char gatewayStringIp[30];
         gatewayIp.toString().toCharArray(gatewayStringIp,30);
         wifiClient.connect(gatewayIp,80);
         sprintf(tmp, "GET /%s HTTP/1.1", requete);
         wifiClient.println(tmp);
         wifiClient.println();
-        //sprintf(tmp, "setGatewayrequest => requete <%s/%s> envoyee", gatewayStringIp, requete);
-        //Serial.println(tmp);
+        wifiClient.println();
+        //sprintf(tmp, "setGatewayrequest => requete <%s/%s> envoyee", gatewayStringIp, requete); Serial.println(tmp);
     } else {
-        Serial.print("envoi requete ");
-        Serial.print(requete);
-        Serial.println(" impossible => wifi non connecte");
+        sprintf(tmp, "envoi requete %s impossible => wifi non connecte", requete); Serial.println(tmp);
     }
 }
 
@@ -112,6 +110,9 @@ void initApi(void){
     Serial.println("envoi du nom de l'esp a la gateway");
     sprintf(buffer, "setName?nom=afficheur");
     setGatewayrequest(buffer);
+    uneRequeteDejaActive = true;
+
+    delay(1000);
 }
 
 //=========================================

@@ -54,7 +54,10 @@ void setup() {
     if(result == true)
     {
         Serial.println("Ready");
-        donneesGlobales.ipGateway = WiFi.softAPIP();
+        char buffer[50];
+        IPAddress ip = WiFi.softAPIP();
+        sprintf(donneesGlobales.ipGateway, "%d.%d.%d.%d", ip[0], ip[1], ip[2], ip[3]);
+        strcpy(donneesGlobales.nomGateway, "gateway");
     }
     else
     {

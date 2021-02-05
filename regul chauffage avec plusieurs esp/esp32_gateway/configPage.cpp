@@ -32,7 +32,7 @@ void sendConfigPage(WiFiClient client, String header){
 
     localClient = client;
     char tmp[200];
-    char tmp2[25];
+    //char tmp2[25];
 
     sendHtmlHeader(client);
 
@@ -157,9 +157,7 @@ void sendConfigPage(WiFiClient client, String header){
         sendLigne("</tr>");
         sendLigne("<tr>");
             sendLigne("<td>ipGateway</td>");
-            IPAddress ip = donneesGlobales.ipGateway;
-            ip.toString().toCharArray(tmp2,25);
-            sprintf(tmp, "<td>%s</td>", tmp2);
+            sprintf(tmp, "<td>%s</td>", donneesGlobales.ipGateway);
             sendLigne(tmp);
         sendLigne("</tr>");
         sendLigne("<tr>");
@@ -169,9 +167,7 @@ void sendConfigPage(WiFiClient client, String header){
         sendLigne("</tr>");
         sendLigne("<tr>");
             sendLigne("<td>ipAfficheur</td>");
-            ip = donneesGlobales.ipAfficheur;
-            ip.toString().toCharArray(tmp2,25);
-            sprintf(tmp, "<td>%s</td>", tmp2);
+            sprintf(tmp, "<td>%s</td>", donneesGlobales.ipAfficheur);
             sendLigne(tmp);
         sendLigne("</tr>");
         sendLigne("<tr>");
@@ -181,9 +177,7 @@ void sendConfigPage(WiFiClient client, String header){
         sendLigne("</tr>");
         sendLigne("<tr>");
             sendLigne("<td>ipPilotage chaudiere</td>");
-            ip = donneesGlobales.ipPilotageChaudiere;
-            ip.toString().toCharArray(tmp2,25);
-            sprintf(tmp, "<td>%s</td>", tmp2);
+            sprintf(tmp, "<td>%s</td>", donneesGlobales.ipPilotageChaudiere);
             sendLigne(tmp);
         sendLigne("</tr>");
         sendLigne("<tr>");
