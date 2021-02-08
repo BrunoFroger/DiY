@@ -45,7 +45,13 @@ void setup() {
         delay(10);
     }
     delay(1000);
-    Serial.println("Serial initialized");
+    Serial.println("Serial initialized");    
+    Serial.println("+-------------------------------+");
+    Serial.println("+                               +");
+    Serial.println("+      WeMos ESP32 Gateway      +");
+    Serial.println("+                               +");
+    Serial.println("+-------------------------------+");
+
 
     initGlobalDatas();
 

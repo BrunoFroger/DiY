@@ -10,6 +10,7 @@
 #include <ESP8266WebServer.h>
 
 #include "wifiTools.hpp"
+#include "api_capteurs.hpp"
 
 #define LOOP_DELAY 100
 
@@ -39,13 +40,20 @@ void setup() {
     }
     delay(1000);
     Serial.println("Serial initialized");
+    Serial.println("+-------------------------------+");
+    Serial.println("+                               +");
+    Serial.println("+      WeMos ESP32 Capteurs     +");
+    Serial.println("+                               +");
+    Serial.println("+-------------------------------+");
 
-    /*
+    
     Serial.println("---------------------------");
     Serial.println("start initWifi");
     initWifi(false);
     Serial.println("end initWifi");
-    */
+    
+
+    initApi();
 
     Serial.println("end of setup");
   
@@ -62,6 +70,8 @@ void loop(){
 
     valeurLue = map(analogRead(entreeAnalogique),0,1024,10,30);
     sprintf(buffer, "valeur lue = %d", valeurLue); Serial.println(buffer);
+
+    updateDatas();
 
     delay(LOOP_DELAY);
 

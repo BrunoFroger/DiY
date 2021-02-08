@@ -50,10 +50,10 @@ void initWifi(bool silence){    // init wifi connection
     }
     delay(100);
     //Serial.println("initWifi => check wifi status");
-    /*if (WiFi.status() == WL_NO_SHIELD){
+    if (WiFi.status() == WL_NO_SHIELD){
         Serial.println("initWifi => ERROR : No shield detected !!");
         return;
-    }*/
+    }
     //Serial.println("initWifi => a shield is detected");
     delay(1000);
     //Serial.println("initWifi => set wifi mode to WIFI_STA : OK");
@@ -88,6 +88,7 @@ void initWifi(bool silence){    // init wifi connection
     }
     if (cpt2 > 20){
         if (!silence) Serial.println("Wifi non connecte");
+        return;
     } else {
         Serial.println("");
         wifiConnected = true;

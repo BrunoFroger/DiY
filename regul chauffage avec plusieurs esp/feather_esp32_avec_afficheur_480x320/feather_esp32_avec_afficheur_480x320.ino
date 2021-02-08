@@ -33,7 +33,13 @@ void setup() {
         delay(10);
     }
     delay(1000);
-    Serial.println("Serial initialized");
+    Serial.println("Serial initialized");    
+    Serial.println("+-------------------------------+");
+    Serial.println("+                               +");
+    Serial.println("+      Feather ESP32 Affichage  +");
+    Serial.println("+                               +");
+    Serial.println("+-------------------------------+");
+
 
     Serial.println("---------------------------");
     Serial.println("start initTft");
