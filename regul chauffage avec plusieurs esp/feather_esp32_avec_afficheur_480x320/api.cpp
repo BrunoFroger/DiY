@@ -12,12 +12,13 @@
 
 // definition des delais de rafraichissement des differentes donnees (en ms)
 // il ne faut pas que deux delay aient la meme valeur
-#define     DELAY_REFRESH_TEST_WIFI     1000*30         // 30s
-#define     DELAY_REFRESH_NTP           1000*60*60*2    // 2H
+#define     DELAY_REFRESH_TEST_WIFI             1000*30         // 30s
+#define     DELAY_REFRESH_NTP                   1000*60*60*2    // 2H
 //#define     DELAY_REFRESH_TEMPERATURE   1000*8        // 8s
-#define     DELAY_REFRESH_TEMPERATURE   1000*25/10      // 2,5s
+#define     DELAY_REFRESH_TEMPERATURE           1000*25/10      // 2,5s
 //#define     DELAY_REFRESH_DONNEE_CHAUFFAGE  1000*10   // 10s
-#define     DELAY_REFRESH_DONNEE_CHAUFFAGE  1000*17/10  // 1,7s
+#define     DELAY_REFRESH_DONNEE_CHAUFFAGE      1000*17/10  // 1,7s
+#define     DELAY_REQUETE_ACTIVE                1000*60  // 1mn
 
 int second = 0;
 int minute = 25;
@@ -35,6 +36,7 @@ char dayOfWeek[7][5] = {"dim", "lun", "mar", "mer", "jeu", "ven", "sam"};
 bool datasUpated = false;
 chauffageDatas mesDonneesApi;
 bool uneRequeteDejaActive = false;
+unsigned long nbMillisecondRequeteActive = 0;
 
 //=========================================
 //
@@ -64,8 +66,18 @@ void afficheDatas(void){
     sprintf(tmp,   "| temperature      |  %10d        |", mesDonneesApi.temperatureMesuree);
     Serial.println(tmp);
     Serial.println("+------------------+--------------------+");
+    sprintf(tmp,   "| Ssid             |%17s   |", mesDonneesApi.wifiSsid);
+    Serial.println(tmp);
+    sprintf(tmp,   "| Passwd           |%17s   |", mesDonneesApi.wifiPwd);
+    Serial.println(tmp);
+    sprintf(tmp,   "| esp name         |%17s   |", mesDonneesApi.espName);
+    Serial.println(tmp);
     if (mesDonneesApi.WifiConnected) strcpy(status,"true"); else strcpy(status,"false");
     sprintf(tmp,   "| wifi connected   |  %10s        |", status);
+    Serial.println(tmp);
+    sprintf(tmp,   "| IP gateway       |%17s   |", mesDonneesApi.ipGateway);
+    Serial.println(tmp);
+    sprintf(tmp,   "| IP locale        |%17s   |", mesDonneesApi.ipLocale);
     Serial.println(tmp);
     Serial.println("+------------------+--------------------+");
 }
@@ -108,7 +120,7 @@ void initApi(void){
     afficheDatas();
     char buffer[100];
     Serial.println("envoi du nom de l'esp a la gateway");
-    sprintf(buffer, "setName?nom=afficheur");
+    sprintf(buffer, "setName?nom=%s", mesDonneesApi.espName);
     setGatewayrequest(buffer);
     uneRequeteDejaActive = true;
 
@@ -398,11 +410,15 @@ void updateDatas(void){
     if (!uneRequeteDejaActive){
         //--------------
         // refresh wifi
-        //--------------
+        //--------------        
+        int refreshWifi = DELAY_REFRESH_TEST_WIFI;
+        if (!isWifiConnected()) {
+            refreshWifi = 5000;
+        }
         //nbMillisecondUpdateWifi = millis();     // on desactive le refresh pour le moment
-        if ((millis() - nbMillisecondUpdateWifi) >= DELAY_REFRESH_TEST_WIFI){     // update cnx wifi
+        if ((millis() - nbMillisecondUpdateWifi) >= refreshWifi){     // update cnx wifi
             //Serial.println();
-            //Serial.println("------------------- requete  wifi-------------------");
+            Serial.println("------------------- requete  wifi-------------------");
             //Serial.println("api.cpp->updateDatas => refresh wifi");
             nbMillisecondUpdateWifi = millis();
             bool tmp = isWifiConnected();
@@ -439,7 +455,7 @@ void updateDatas(void){
         if ((millis() - nbMillisecondUpdateNTP) >= refreshNtp){     // update ntp
             nbMillisecondUpdateNTP = millis();
             //Serial.println();
-            //Serial.println("------------------- requete  ntp -------------------");
+            Serial.println("------------------- requete  ntp -------------------");
             //Serial.println("api.cpp->updateDatas => refresh ntp");
             setGatewayrequest("getNtp");
             uneRequeteDejaActive = true;
@@ -455,7 +471,7 @@ void updateDatas(void){
         if ((millis() - nbMillisecondUpdateTemperature) >= DELAY_REFRESH_TEMPERATURE){
             nbMillisecondUpdateTemperature = millis();
             //Serial.println();
-            //Serial.println("------------------- requete temperature ------------");
+            Serial.println("------------------- requete temperature ------------");
             //Serial.println("api.cpp->updateDatas => refresh temperature");
             setGatewayrequest("getTemperature");
             uneRequeteDejaActive = true;
@@ -471,11 +487,22 @@ void updateDatas(void){
         if ((millis() - nbMillisecondUpdateDonneesChauffage) >= DELAY_REFRESH_DONNEE_CHAUFFAGE){
             nbMillisecondUpdateDonneesChauffage = millis();
             //Serial.println();
-            //Serial.println("------------------- requete chauffage -----------");
+            Serial.println("------------------- requete chauffage -----------");
             //Serial.println("api.cpp->updateDatas => refresh donnees chauffage");
             setGatewayrequest("getInfoChauffage");
             uneRequeteDejaActive = true;
             delay(100);
+        }
+    }
+    
+    // test si le flag requete active est bloque
+    // si plus d'une minute avec requete active a true => on debloque
+    if (uneRequeteDejaActive){
+        //nbMillisecondRequeteActive = millis();     // on desactive le refresh pour le moment
+        if ((millis() - nbMillisecondRequeteActive) >= DELAY_REQUETE_ACTIVE){
+            nbMillisecondRequeteActive = millis();
+            Serial.println("------------------- deblocage requete active -----------");
+            uneRequeteDejaActive = false;
         }
     }
 

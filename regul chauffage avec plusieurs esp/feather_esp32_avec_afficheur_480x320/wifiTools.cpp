@@ -10,9 +10,9 @@
 #include "wifiTools.hpp"
 #include "api.hpp"
 
-char ipAdress[20];
-char wifiSsid[25];
-char wifiPassword[50];
+//char ipAdress[20];
+//char wifiSsid[25];
+//char wifiPassword[50];
 int cptTryWifi = 0;
 boolean wifiConnected = false;
 boolean wifiFound = false;
@@ -62,25 +62,24 @@ void initWifi(bool silence){    // init wifi connection
     cptTryWifi = 0;
 
     // TODO mettre a jour avec les identifiants du serveur web central
-    strcpy(wifiSsid,"gateway-chauffage");
-    strcpy(wifiPassword, "0296911369");
     
     // Connect to WiFi network
     if (!silence) Serial.print("Connecting to ");
-    if (!silence) Serial.println(wifiSsid);
-    WiFi.begin(wifiSsid, wifiPassword);
+    if (!silence) Serial.println(mesDonneesApi.wifiSsid);
+    WiFi.begin(mesDonneesApi.wifiSsid, mesDonneesApi.wifiPwd);
     int cpt=0;
     int cpt2=0;
     while (WiFi.status() != WL_CONNECTED) {  //Attente de la connexion
         delay(500);
+        Serial.print("wifiStatus = "); Serial.println(WiFi.status());
         //char tmp[10];
         //sprintf(tmp,"%d,",cpt);
         //Serial.print(tmp);
+        WiFi.begin(mesDonneesApi.wifiSsid, mesDonneesApi.wifiPwd);
         if (!silence) Serial.print(".");   //Typiquement 5 à 10 points avant la connexion
         if (cpt++ >= 5){
             if (!silence) Serial.println();
             cpt=0;
-            WiFi.begin(wifiSsid, wifiPassword);
         }
         if (cpt2++ > 20){
             break;
@@ -98,15 +97,16 @@ void initWifi(bool silence){    // init wifi connection
     if (!silence) Serial.print("Use this URL to connect: ");
     if (!silence) Serial.print("http://");
     IPAddress tmpIp = WiFi.localIP();
-    sprintf(ipAdress,"%d.%d.%d.%d",tmpIp[0],tmpIp[1],tmpIp[2],tmpIp[3]);
+    sprintf(mesDonneesApi.ipLocale,"%d.%d.%d.%d",tmpIp[0],tmpIp[1],tmpIp[2],tmpIp[3]);
     //Serial.print(WiFi.localIP());
-    if (!silence) Serial.print(ipAdress);
+    if (!silence) Serial.print(mesDonneesApi.ipLocale);
     if (!silence) Serial.println("/");  //Utiliser cette URL sous Firefox de preference à Chrome
 
     //IPAddress gatewayIp = WiFi.gatewayIP();
     gatewayIp = WiFi.gatewayIP();
+    sprintf(mesDonneesApi.ipGateway,"%d.%d.%d.%d",gatewayIp[0],gatewayIp[1],gatewayIp[2],gatewayIp[3]);
     if (!silence) Serial.print("La gateway est : ");
-    if (!silence) Serial.println(gatewayIp.toString());
+    if (!silence) Serial.println(mesDonneesApi.ipGateway);
 
     if (!silence) Serial.println("initWifi => fin");
 }
@@ -117,7 +117,7 @@ void initWifi(bool silence){    // init wifi connection
 //
 //=========================================
 char *getSsid(){
-    return wifiSsid;
+    return mesDonneesApi.wifiSsid;
 }
 
 //=========================================
@@ -126,7 +126,7 @@ char *getSsid(){
 //
 //=========================================
 char *getIp(){
-    return ipAdress;
+    return mesDonneesApi.ipLocale;
 }
 
 //=========================================

@@ -8,3 +8,13 @@ configuration de l'IDE Arduino pour televerser ce code
 - type de carte : ESP32 Arduino / Adafruit ESP32 Feather    OK
 - type de carte : ESP32 Arduino (in sketchbook) / ESP32 dev module NOK
 - port : /dev/cu.SLAB_USBtoUART     OK
+
+
+
+
+info pour recuperation datas meteo
+http://api.openweathermap.org/data/2.5/weather?q=Louannec&units=metric&lang=fr&appid=d5661c9ed3cb8f728b90243ebb890806
+
+
+
+infos pou recuperation datas geoloc

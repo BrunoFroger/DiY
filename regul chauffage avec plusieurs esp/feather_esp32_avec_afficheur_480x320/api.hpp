@@ -24,6 +24,12 @@ typedef struct {
     bool temperatureMesureeModifiee;
     bool WifiConnected;
     bool refreshMesures;
+    // donnees reseau
+    char wifiSsid[50];
+    char wifiPwd[50];
+    char espName[50];
+    char ipGateway[25];
+    char ipLocale[25];
 } chauffageDatas;
 
 extern chauffageDatas mesDonneesApi;

@@ -169,7 +169,6 @@ int getTemperatureRampe(void){
     return donneesGlobales.temperature;
 }
 
-
 //=========================================
 //
 //          getTemperature
@@ -180,12 +179,15 @@ int getTemperature(void){
     switch (donneesGlobales.modeCalculTemperature){
         case 1:
             resultat = getTemperatureRampe();
+            //Serial.println("mode calcul temperature = rampe");
             break;
         case 2:
             resultat = getTemperatureSimulee();
+            //Serial.println("mode calcul temperature = simulation");
             break;
         case 3:
             resultat = getTemperatureMesuree();
+            //Serial.println("mode calcul temperature = mesure");
             break;
         default:
             Serial.println("mode de calcul de la temperature inconnu");
@@ -194,4 +196,3 @@ int getTemperature(void){
     donneesGlobales.temperature = resultat;
     return donneesGlobales.temperature;
 }
-

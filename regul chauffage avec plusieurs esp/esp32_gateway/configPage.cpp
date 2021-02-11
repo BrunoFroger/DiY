@@ -134,7 +134,14 @@ void sendConfigPage(WiFiClient client, String header){
         sendLigne("</tr>");
         sendLigne("<tr>");
             sendLigne("<td>mode calcul temperature</td>");
-            sprintf(tmp, "<td>%d</td>", donneesGlobales.modeCalculTemperature); sendLigne(tmp);
+            char mode[20];
+            switch(donneesGlobales.modeCalculTemperature){
+                case 1: strcpy(mode,"rampe"); break;
+                case 2: strcpy(mode,"simul"); break;
+                case 3: strcpy(mode,"mesure"); break;
+                default : strcpy(mode,"");
+            }
+            sprintf(tmp, "<td>%s</td>", mode); sendLigne(tmp);
             sendLigne("<td><a href= \"incrementeModeCalculTemperature\">+</td>");
             sendLigne("<td><a href= \"derementeModeCalculTemperature\">-</td>");
         sendLigne("</tr>");
@@ -153,6 +160,16 @@ void sendConfigPage(WiFiClient client, String header){
         sendLigne("<tr>");
             sendLigne("<td>nb clients connectes</td>");
             sprintf(tmp, "<td>%d</td>", donneesGlobales.nbClientsConnectes);
+            sendLigne(tmp);
+        sendLigne("</tr>");
+        sendLigne("<tr>");
+            sendLigne("<td>Ssid</td>");
+            sprintf(tmp, "<td>%s</td>", donneesGlobales.wifiSsid);
+            sendLigne(tmp);
+        sendLigne("</tr>");
+        sendLigne("<tr>");
+            sendLigne("<td>Password</td>");
+            sprintf(tmp, "<td>%s</td>", donneesGlobales.wifiPwd);
             sendLigne(tmp);
         sendLigne("</tr>");
         sendLigne("<tr>");

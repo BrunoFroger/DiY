@@ -6,19 +6,18 @@
 #include <Arduino.h>
 #include <string.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
+//#include <ESP8266WebServer.h>
 
 #include "wifiTools.hpp"
+#include "api_capteurs.hpp"
 
-char ipAdress[20];
-char wifiSsid[25];
-char wifiPassword[50];
+//char ipAdress[20];
+//char wifiSsid[25];
+//char wifiPassword[50];
 int cptTryWifi = 0;
-boolean wifiConnected = false;
 boolean wifiFound = false;
 WiFiClient wifiClient;
 WiFiServer wifiServer(80);//Ecouter le port 80
-IPAddress gatewayIp;
 
 //=========================================
 //
@@ -46,7 +45,7 @@ void initWifi(bool silence){    // init wifi connection
     if (!silence){
         Serial.println("initWifi => debut");
     } else {
-        Serial.println("try wifi ....");
+        Serial.print("try wifi ....");
     }
     delay(100);
     //Serial.println("initWifi => check wifi status");
@@ -54,60 +53,80 @@ void initWifi(bool silence){    // init wifi connection
         Serial.println("initWifi => ERROR : No shield detected !!");
         return;
     }
-    //Serial.println("initWifi => a shield is detected");
+    if (!silence) Serial.println("initWifi => a shield is detected");
     delay(1000);
-    //Serial.println("initWifi => set wifi mode to WIFI_STA : OK");
     deconnecteWifi();
     delay(1000);
     cptTryWifi = 0;
 
     // TODO mettre a jour avec les identifiants du serveur web central
-    strcpy(wifiSsid,"gateway-chauffage");
-    strcpy(wifiPassword, "0296911369");
+    //strcpy(wifiSsid,"gateway-chauffage");
+    //strcpy(wifiPassword, "0296911369");
+    //strcpy(wifiPassword, "");
     
     // Connect to WiFi network
-    if (!silence) Serial.print("Connecting to ");
-    if (!silence) Serial.println(wifiSsid);
-    WiFi.begin(wifiSsid, wifiPassword);
+    if (!silence) {
+        Serial.print("Connecting to ");
+        Serial.println(mesDonneesCapteurs.wifiSsid);
+    }
+    WiFi.mode(WIFI_STA);
+    delay(100);
+    WiFi.begin(mesDonneesCapteurs.wifiSsid, mesDonneesCapteurs.wifiPwd);
     int cpt=0;
     int cpt2=0;
-    while (WiFi.status() != WL_CONNECTED) {  //Attente de la connexion
+    int connected = WiFi.status() != WL_CONNECTED;
+    while (connected) {  //Attente de la connexion
         delay(500);
-        //char tmp[10];
-        //sprintf(tmp,"%d,",cpt);
-        //Serial.print(tmp);
+        char buffer[100];
+        sprintf(buffer,"ssid = %s, pwd = %s", mesDonneesCapteurs.wifiSsid, mesDonneesCapteurs.wifiPwd); Serial.println(buffer);
+        Serial.print("wifiStatus = "); Serial.println(connected);
+        WiFi.begin(mesDonneesCapteurs.wifiSsid, mesDonneesCapteurs.wifiPwd);
         if (!silence) Serial.print(".");   //Typiquement 5 à 10 points avant la connexion
         if (cpt++ >= 5){
             if (!silence) Serial.println();
             cpt=0;
-            WiFi.begin(wifiSsid, wifiPassword);
         }
         if (cpt2++ > 20){
             break;
         }
+    connected = WiFi.status() != WL_CONNECTED;
     }
+    Serial.println();
+
     if (cpt2 > 20){
-        if (!silence) Serial.println("Wifi non connecte");
+        // ona  fait 20 tentatives
+        // imposible de se connecter au wifi !
+        if (!silence) {
+            Serial.println();
+            Serial.println("Wifi non connecte");
+        } else {
+            Serial.println(" => KO ; pas de wifi");
+        }
+        mesDonneesCapteurs.WifiConnected = false;
         return;
     } else {
+        // on a reussit a se connecter au wifi
         Serial.println("");
-        wifiConnected = true;
-        if (!silence) Serial.println("WiFi connected");
+        mesDonneesCapteurs.WifiConnected = true;
+        if (!silence) {
+            Serial.println("WiFi connecte");
+        } else {
+            Serial.println(" => OK");
+        }
     }
 
     // Print the IP address
-    if (!silence) Serial.print("Use this URL to connect: ");
-    if (!silence) Serial.print("http://");
+    if (!silence) Serial.print("ip locale = ");
     IPAddress tmpIp = WiFi.localIP();
-    sprintf(ipAdress,"%d.%d.%d.%d",tmpIp[0],tmpIp[1],tmpIp[2],tmpIp[3]);
-    //Serial.print(WiFi.localIP());
-    if (!silence) Serial.print(ipAdress);
-    if (!silence) Serial.println("/");  //Utiliser cette URL sous Firefox de preference à Chrome
+    sprintf(mesDonneesCapteurs.ipLocale,"%d.%d.%d.%d",tmpIp[0],tmpIp[1],tmpIp[2],tmpIp[3]);
+    if (!silence) Serial.print(mesDonneesCapteurs.ipLocale);
 
     //IPAddress gatewayIp = WiFi.gatewayIP();
-    gatewayIp = WiFi.gatewayIP();
+    tmpIp = WiFi.gatewayIP();
+    mesDonneesCapteurs.gateway = tmpIp;
+    sprintf(mesDonneesCapteurs.ipGateway,"%d.%d.%d.%d",tmpIp[0],tmpIp[1],tmpIp[2],tmpIp[3]);
     if (!silence) Serial.print("La gateway est : ");
-    if (!silence) Serial.println(gatewayIp.toString());
+    if (!silence) Serial.println(mesDonneesCapteurs.ipGateway);
 
     if (!silence) Serial.println("initWifi => fin");
 }
@@ -118,7 +137,7 @@ void initWifi(bool silence){    // init wifi connection
 //
 //=========================================
 char *getSsid(){
-    return wifiSsid;
+    return mesDonneesCapteurs.wifiSsid;
 }
 
 //=========================================
@@ -127,7 +146,7 @@ char *getSsid(){
 //
 //=========================================
 char *getIp(){
-    return ipAdress;
+    return mesDonneesCapteurs.ipLocale;
 }
 
 //=========================================
@@ -138,11 +157,11 @@ char *getIp(){
 boolean isWifiConnected(){
     if (WiFi.status() == WL_CONNECTED) {
         //Serial.println("wifiTools.cpp => isWifiConnected : TRUE");
-        wifiConnected = true;
+        mesDonneesCapteurs.WifiConnected = true;
     } else {
         //Serial.println("wifiTools.cpp => isWifiConnected : FALSE");
-        wifiConnected = false;
+        mesDonneesCapteurs.WifiConnected = false;
     }
     //wifiConnected = (WiFi.status() == WL_CONNECTED);
-    return wifiConnected;
+    return mesDonneesCapteurs.WifiConnected;
 }

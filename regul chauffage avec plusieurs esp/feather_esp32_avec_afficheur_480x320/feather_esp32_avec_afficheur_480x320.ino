@@ -13,7 +13,7 @@
 
 
 #define LOOP_DELAY 10
-#define REFRESH_DELAY_AFFICHAGE_DATAS   1000*10
+#define REFRESH_DELAY_AFFICHAGE_DATAS   1000*2
 
 int nbMillisecondAffichageDatas = 0;
 
@@ -24,6 +24,7 @@ int nbMillisecondAffichageDatas = 0;
 //=================================================
 void setup() {        
     // initialize serial communication
+    //Serial.begin(115200);
     Serial.begin(115200);
     int timeoutInitSerial = 100;
     while (timeoutInitSerial-- > 0)
@@ -40,6 +41,9 @@ void setup() {
     Serial.println("+                               +");
     Serial.println("+-------------------------------+");
 
+    strcpy(mesDonneesApi.wifiSsid, "gateway-chauffage");
+    strcpy(mesDonneesApi.wifiPwd, "0296911369");
+    strcpy(mesDonneesApi.espName, "Afficheur");
 
     Serial.println("---------------------------");
     Serial.println("start initTft");
@@ -72,7 +76,7 @@ void loop(){
 
     //nbMillisecondAffichageDatas = millis();     // on desactive le refresh pour le moment
     if ((millis() - nbMillisecondAffichageDatas) >= REFRESH_DELAY_AFFICHAGE_DATAS){
-        //afficheDatas();
+        afficheDatas();
         nbMillisecondAffichageDatas = millis(); 
     }
 

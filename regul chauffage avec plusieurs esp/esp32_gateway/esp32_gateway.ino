@@ -16,9 +16,12 @@
 #define LOOP_DELAY 10
 
 // Replace with your network credentials
-const char* ssid     = "gateway-chauffage";
-const char* password = "0296911369";
+//const char* ssid     = "gateway-chauffage";
+//const char* password = "0296911369";
+//const char* password = "";
 
+#define     DELAY_REFRESH_AFFICHAGE_DATAS   1000*2      //2s
+unsigned long nbMillisecondDisplayDatas = 0;
 
 // Set web server port number to 80
 WiFiServer server(80);
@@ -36,6 +39,8 @@ WiFiClient client;
 //=================================================
 void setup() { 
     // initialize serial communication
+    //Serial.begin(115200);
+    //Serial.begin(230400);
     Serial.begin(115200);
     int timeoutInitSerial = 100;
     while (timeoutInitSerial-- > 0)
@@ -52,11 +57,15 @@ void setup() {
     Serial.println("+                               +");
     Serial.println("+-------------------------------+");
 
+    strcpy(donneesGlobales.wifiSsid, "gateway-chauffage");
+    strcpy(donneesGlobales.wifiPwd, "0296911369");
 
     initGlobalDatas();
 
     Serial.print("Setting soft-AP ... ");
-    boolean result = WiFi.softAP(ssid, password);
+    char buffer [100];
+    sprintf("Demarrage du point d'acces Wifi ssid=%s, pwd=%d", donneesGlobales.wifiSsid, donneesGlobales.wifiPwd); Serial.println(buffer);
+    boolean result = WiFi.softAP(donneesGlobales.wifiSsid, donneesGlobales.wifiPwd, 1, false, 8);
     if(result == true)
     {
         Serial.println("Ready");
@@ -97,6 +106,13 @@ void loop(){
         analyseRequete(client,adresseIpClient);
     }
     refreshNtp();
-    delay(100);
+
+    //nbMillisecondDisplayDatas = millis();     // on desactive le refresh pour le moment
+    if ((millis() - nbMillisecondDisplayDatas) >= DELAY_REFRESH_AFFICHAGE_DATAS){
+        nbMillisecondDisplayDatas = millis();
+        afficheDatas();
+    }
+   
+    delay(LOOP_DELAY);
 }
 

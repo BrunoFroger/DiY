@@ -121,7 +121,7 @@ void analyseHeader(WiFiClient client, String header, char *adresseIpClient){
         sendMessage(client, message);
     } else if (header.indexOf("GET /getTemperature") >= 0) {
         if (donneesGlobales.modeVerbose) Serial.println("requete get temperature traitee");
-        message = "temperature=" + String(getTemperature());
+        message = "temperature=" + String(donneesGlobales.temperature);
         sendMessage(client, message);
         if (donneesGlobales.modeVerbose) Serial.println(message);
     } else if (header.indexOf("GET /getInfoChauffage") >= 0) {

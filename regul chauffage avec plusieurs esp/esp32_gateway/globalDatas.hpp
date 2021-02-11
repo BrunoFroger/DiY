@@ -33,6 +33,8 @@ typedef struct {
     int puissanceChauffage;
 
     // parametres reseau
+    char wifiSsid[50];
+    char wifiPwd[50];
     int nbClientsConnectes = 0;
     char ipGateway[50];
     char nomGateway[50];
@@ -50,6 +52,6 @@ typedef struct {
 extern typeGlobalDatas donneesGlobales;
 
 extern void initGlobalDatas(void);
-
+extern void afficheDatas(void);
 
 #endif
