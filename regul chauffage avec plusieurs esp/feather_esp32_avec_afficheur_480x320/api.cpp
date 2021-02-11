@@ -222,15 +222,12 @@ char *getGatewayResponse(char *response){
         //Serial.println(wifiClient.available());
         while (wifiClient.available() > 0){
             char car = wifiClient.read();
-            //Serial.print(car);
-            //if ((car >= '0') && (car <='z')){
-                response[idx++] = car;
-                if (idx >= TAILLE_REPONSE) {
-                    Serial.print("Erreur : on depasse la taille de reponse possible (%d)");
-                    Serial.println(TAILLE_REPONSE);
-                    return NULL;
-                }
-            //}
+            response[idx++] = car;
+            if (idx >= TAILLE_REPONSE) {
+                Serial.print("Erreur : on depasse la taille de reponse possible (%d)");
+                Serial.println(TAILLE_REPONSE);
+                return NULL;
+            }
         }
         response[idx] = '\0';
         /*Serial.println("Resultat de la requete : ");

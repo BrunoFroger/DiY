@@ -6,7 +6,7 @@
 #include <Arduino.h>
 #include <string.h>
 #include <ESP8266WiFi.h>
-//#include <ESP8266WebServer.h>
+#include <ESP8266WebServer.h>
 
 #include "wifiTools.hpp"
 #include "api_capteurs.hpp"
@@ -18,6 +18,9 @@ int cptTryWifi = 0;
 boolean wifiFound = false;
 WiFiClient wifiClient;
 WiFiServer wifiServer(80);//Ecouter le port 80
+
+// table des reseaux wifi a disposition
+TypeWifiNetwork tblWifiNetwork[10];
 
 //=========================================
 //

@@ -12,6 +12,7 @@
 #include "ntp.hpp"
 #include "webRequest.hpp"
 #include "globalDatas.hpp"
+#include "meteo.hpp"
 
 #define LOOP_DELAY 10
 
@@ -22,6 +23,9 @@
 
 #define     DELAY_REFRESH_AFFICHAGE_DATAS   1000*2      //2s
 unsigned long nbMillisecondDisplayDatas = 0;
+
+#define     DELAY_REFRESH_OPENWEATHERMAP   1000*10      //10s
+unsigned long nbMillisecondOpenweathermap = 0;
 
 // Set web server port number to 80
 WiFiServer server(80);
@@ -107,10 +111,16 @@ void loop(){
     }
     refreshNtp();
 
-    //nbMillisecondDisplayDatas = millis();     // on desactive le refresh pour le moment
+    nbMillisecondDisplayDatas = millis();     // on desactive le refresh pour le moment
     if ((millis() - nbMillisecondDisplayDatas) >= DELAY_REFRESH_AFFICHAGE_DATAS){
         nbMillisecondDisplayDatas = millis();
         afficheDatas();
+    }
+   
+    //nbMillisecondOpenweathermap = millis();     // on desactive le refresh pour le moment
+    if ((millis() - nbMillisecondOpenweathermap) >= DELAY_REFRESH_OPENWEATHERMAP){
+        nbMillisecondOpenweathermap = millis();
+        refreshMeteoInfos();
     }
    
     delay(LOOP_DELAY);
