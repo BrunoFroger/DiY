@@ -19,9 +19,6 @@ boolean wifiFound = false;
 WiFiClient wifiClient;
 WiFiServer wifiServer(80);//Ecouter le port 80
 
-// table des reseaux wifi a disposition
-TypeWifiNetwork tblWifiNetwork[10];
-
 //=========================================
 //
 //          deconnecteWifi
@@ -38,6 +35,53 @@ void deconnecteWifi(){
     //Serial.println("deconnecteWifi => fin");
 }
 
+//=========================================
+//
+//          scanNetworks
+//
+//=========================================
+void scanNetworks(void){    // search for availables Wifi Networks
+    int nbSsid = WiFi.scanNetworks();
+    if (nbSsid != -1){
+        Serial.print(nbSsid);
+        Serial.println(" wifi networks found");
+        strcpy(wifiSsid,"");
+        while (strcmp(wifiSsid,"") == 0){        
+            for (int ssidNetwork = 0 ; ssidNetwork < nbSsid ; ssidNetwork++){
+                Serial.print("  check network : ");
+                Serial.print(WiFi.SSID(ssidNetwork));
+                int availableSsidIndex = isAvailableAccesPoint(WiFi.SSID(ssidNetwork));
+                if (availableSsidIndex != -1){
+                    char tmp[30];
+                    getSsid(availableSsidIndex).toCharArray(tmp,25);
+                    //Serial.print(" on a trouve : ");
+                    strcpy(wifiSsid,tmp);
+                    //Serial.print(wifiSsid);
+                    //Serial.print("/");
+                    getPwd(availableSsidIndex).toCharArray(tmp,30);
+                    strcpy(wifiPassword,tmp);
+                    //Serial.print(wifiPassword);
+                    Serial.println(" => OK");
+                    wifiFound = true;
+                    break;
+                }
+                Serial.println(" => NOK");
+            }
+            if (strcmp(wifiSsid,"") == 0){
+                delay(2000);
+                cptTryWifi++;
+                Serial.printf("Essai %d de connexion Wifi\n",cptTryWifi);
+                if (cptTryWifi > 2){
+                    Serial.println("Aucun réseau détecté .. on passe");
+                    wifiFound = false;
+                    break;
+                }
+                Serial.println("No Wifi network found ==> rescan ......");
+                nbSsid = WiFi.scanNetworks();
+            }
+        }
+    }
+}
 //=========================================
 //
 //          initWifi
