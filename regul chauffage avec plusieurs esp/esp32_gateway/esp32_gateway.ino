@@ -82,7 +82,7 @@ void setup() {
     int nbTentatives=0;
     while ( WiFi.status() != WL_CONNECTED ) {
         if (nbTentatives++ > 10) break;
-        Serial.print(status); Serial.print(" => ");
+        Serial.print(WiFi.status()); Serial.print(" => ");
         switch(status){
             case WL_CONNECTED : Serial.println("WL_CONNECTED"); break;
             case WL_NO_SHIELD : Serial.println("WL_NO_SHIELD"); break;
