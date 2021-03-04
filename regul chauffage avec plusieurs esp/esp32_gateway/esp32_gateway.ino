@@ -75,14 +75,15 @@ void setup() {
     Serial.println("+      Connexion internet       +");
     Serial.println("+                               +");
     Serial.println("+-------------------------------+");
-    WiFi.begin(routeurSsid, routeurPwd);  
+    int status = WiFi.begin(routeurSsid, routeurPwd);  
     int nbTentatives=0;
     Serial.print("tentative de connexion a ");
     Serial.println(routeurSsid);
-    while ( WiFi.status() != WL_CONNECTED ) {
+    while ( status != WL_CONNECTED ) {
         delay ( 500 );
         if (nbTentatives++ > 20) break;
-        switch(WiFi.status()){
+        Serial.print(status); Serial.print(" => ");
+        switch(status){
             case WL_CONNECTED : Serial.println("WL_CONNECTED"); break;
             case WL_NO_SHIELD : Serial.println("WL_NO_SHIELD"); break;
             case WL_IDLE_STATUS : Serial.println("WL_IDLE_STATUS"); break;
