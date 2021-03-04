@@ -81,7 +81,7 @@ void setup() {
     Serial.print("tentative de connexion a ");
     Serial.println(routeurSsid);
     while ( status != WL_CONNECTED ) {
-        delay ( 500 );
+        delay (1000);
         if (nbTentatives++ > 20) break;
         Serial.print(status); Serial.print(" => ");
         switch(status){
@@ -97,7 +97,7 @@ void setup() {
         status = WiFi.begin(routeurSsid, routeurPwd);  
     }
     if (status != WL_CONNECTED){
-        Serial.println("impossible de se connecter a");
+        Serial.print("impossible de se connecter a");
     } else {
         Serial.print("vous etes connecte au routeur ");
     }
