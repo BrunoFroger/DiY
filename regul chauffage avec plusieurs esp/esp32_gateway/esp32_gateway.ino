@@ -98,6 +98,8 @@ void setup() {
 //=================================================
 void loop(){
 
+    refreshNtp();
+
     if (donneesGlobales.nbClientsConnectes != WiFi.softAPgetStationNum()){
         Serial.println("changement du nombre de stations connectees");
         Serial.printf("%s => Stations connected = %d\n", WiFi.softAPgetStationNum());
@@ -105,13 +107,13 @@ void loop(){
     }
     client = server.available();
     if (client){
+        Serial.println("traitement d'une requete")
         char adresseIpClient[20];
         IPAddress ipClient = client.remoteIP();
         sprintf(adresseIpClient,"%d.%d.%d.%d",ipClient[0],ipClient[1],ipClient[2],ipClient[3]);
         sprintf(buffer, "une requete recue de %s", adresseIpClient); Serial.println(buffer);
         analyseRequete(client,adresseIpClient);
     }
-    refreshNtp();
 
     nbMillisecondDisplayDatas = millis();     // on desactive le refresh pour le moment
     if ((millis() - nbMillisecondDisplayDatas) >= DELAY_REFRESH_AFFICHAGE_DATAS){
