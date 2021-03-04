@@ -38,10 +38,10 @@ WiFiClient client;
 char buffer [200];
 
 // routeur d'acces a internet
-const char *routeurSsid     = "Livebox-006d";
-const char *routeurPwd = "A23F1F7979C9DD3C5916324123";
-//const char *routeurSsid     = "TP-LINK_88E2";
-//const char *routeurPwd = "74546007";
+//const char *routeurSsid     = "Livebox-006d";
+//const char *routeurPwd = "A23F1F7979C9DD3C5916324123";
+const char *routeurSsid     = "TP-LINK_88E2";
+const char *routeurPwd = "74546007";
 
 //=================================================
 //
@@ -76,13 +76,13 @@ void setup() {
     Serial.println("+      Connexion internet       +");
     Serial.println("+                               +");
     Serial.println("+-------------------------------+");
+    Serial.print("tentative de connexion a ");
+    Serial.println(routeurSsid);
     int status = WiFi.begin(routeurSsid, routeurPwd);  
     delay (10000);
     int nbTentatives=0;
-    Serial.print("tentative de connexion a ");
-    Serial.println(routeurSsid);
     while ( status != WL_CONNECTED ) {
-        status = WiFi.begin(routeurSsid, routeurPwd);  
+        //status = WiFi.begin(routeurSsid, routeurPwd);  
         if (nbTentatives++ > 10) break;
         Serial.print(status); Serial.print(" => ");
         switch(status){
