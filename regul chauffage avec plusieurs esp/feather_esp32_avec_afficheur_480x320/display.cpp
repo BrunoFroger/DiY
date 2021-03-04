@@ -396,9 +396,9 @@ void initTft(){
 //
 //=================================================
 void refreshDisplay(void){
+    if (refreshTitle) displayTitle("Chauffage");
     if (isDatasAvailables()){
         resetDataAvailables();
-        displayTitle("Chauffage");
         displayValeurs();
         displayParametres();
         displayMesures();

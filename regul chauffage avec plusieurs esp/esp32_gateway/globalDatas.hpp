@@ -45,7 +45,7 @@ typedef struct {
 
     // autres parametres
     bool modeVerbose = false;
-    int modeCalculTemperature = 1;
+    int modeCalculTemperature = 3;
 } typeGlobalDatas;
 
 

@@ -8,6 +8,8 @@
 
 #include "globalDatas.hpp"
 
+#define pinCapteurTemperature   A0
+
 int deltaTempExt;
 int deltaConsigne;
 int deltaPuissance;
@@ -57,7 +59,7 @@ void displayInfosSimulation(void){
 
 //=========================================
 //
-//          getTemperatureSimulee
+//          calculRegulation
 //
 //=========================================
 void calculRegulation(void){
@@ -151,6 +153,8 @@ int getTemperatureSimulee(void){
 //
 //=========================================
 int getTemperatureMesuree(void){
+    int value = analogRead(pinCapteurTemperature);
+    donneesGlobales.temperature=map(value,0,1023,100,300);
     return donneesGlobales.temperature;
 }
 

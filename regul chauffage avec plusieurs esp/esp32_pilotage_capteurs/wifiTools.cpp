@@ -127,7 +127,7 @@ void initWifi(bool silence){    // init wifi connection
         char buffer[100];
         sprintf(buffer,"ssid = %s, pwd = %s", mesDonneesCapteurs.wifiSsid, mesDonneesCapteurs.wifiPwd); Serial.println(buffer);
         Serial.print("wifiStatus = "); Serial.println(connected);
-        WiFi.begin(mesDonneesCapteurs.wifiSsid, mesDonneesCapteurs.wifiPwd);
+        //WiFi.begin(mesDonneesCapteurs.wifiSsid, mesDonneesCapteurs.wifiPwd);
         if (!silence) Serial.print(".");   //Typiquement 5 à 10 points avant la connexion
         if (cpt++ >= 5){
             if (!silence) Serial.println();

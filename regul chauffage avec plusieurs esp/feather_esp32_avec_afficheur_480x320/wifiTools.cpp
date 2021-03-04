@@ -81,7 +81,7 @@ void initWifi(bool silence){    // init wifi connection
         //char tmp[10];
         //sprintf(tmp,"%d,",cpt);
         //Serial.print(tmp);
-        WiFi.begin(mesDonneesApi.wifiSsid, mesDonneesApi.wifiPwd);
+        //WiFi.begin(mesDonneesApi.wifiSsid, mesDonneesApi.wifiPwd);
         if (!silence) Serial.print(".");   //Typiquement 5 à 10 points avant la connexion
         if (cpt++ >= 5){
             if (!silence) Serial.println();
