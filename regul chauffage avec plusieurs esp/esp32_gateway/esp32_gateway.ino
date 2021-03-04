@@ -66,6 +66,7 @@ void setup() {
     Serial.println("+                               +");
     Serial.println("+      WeMos ESP32 Gateway      +");
     Serial.println("+                               +");
+    Serial.println("+           setup               +");
     Serial.println("+-------------------------------+");
 
 
@@ -93,14 +94,14 @@ void setup() {
             case WL_CONNECTION_LOST : Serial.println("WL_CONNECTION_LOST"); break;
             case WL_DISCONNECTED : Serial.println("WL_DISCONNECTED"); break;
         }
-        WiFi.begin(routeurSsid, routeurPwd);  
+        status = WiFi.begin(routeurSsid, routeurPwd);  
     }
-    if (WiFi.status() != WL_CONNECTED){
-        Serial.println("impossible de se connecter");
+    if (status != WL_CONNECTED){
+        Serial.println("impossible de se connecter a");
     } else {
-        Serial.print("connecte au routeur : ");
-        Serial.println(routeurSsid);
+        Serial.print("vous etes connecte au routeur ");
     }
+    Serial.println(routeurSsid);
 
     Serial.println("+-------------------------------+");
     Serial.println("+                               +");
