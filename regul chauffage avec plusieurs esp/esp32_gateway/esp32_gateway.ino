@@ -77,11 +77,12 @@ void setup() {
     Serial.println("+                               +");
     Serial.println("+-------------------------------+");
     int status = WiFi.begin(routeurSsid, routeurPwd);  
+    delay (1000);
     int nbTentatives=0;
     Serial.print("tentative de connexion a ");
     Serial.println(routeurSsid);
     while ( status != WL_CONNECTED ) {
-        delay (1000);
+        status = WiFi.begin(routeurSsid, routeurPwd);  
         if (nbTentatives++ > 20) break;
         Serial.print(status); Serial.print(" => ");
         switch(status){
@@ -94,7 +95,7 @@ void setup() {
             case WL_CONNECTION_LOST : Serial.println("WL_CONNECTION_LOST"); break;
             case WL_DISCONNECTED : Serial.println("WL_DISCONNECTED"); break;
         }
-        status = WiFi.begin(routeurSsid, routeurPwd);  
+        delay (1000);
     }
     if (status != WL_CONNECTED){
         Serial.print("impossible de se connecter a");
