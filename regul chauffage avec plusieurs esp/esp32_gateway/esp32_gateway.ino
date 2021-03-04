@@ -77,6 +77,8 @@ void setup() {
     Serial.println("+-------------------------------+");
     WiFi.begin(routeurSsid, routeurPwd);  
     int nbTentatives=0;
+    Serial.print("tentative de connexion a ");
+    Serial.println(routeurSsid);
     while ( WiFi.status() != WL_CONNECTED ) {
         delay ( 500 );
         if (nbTentatives > 20) break;
