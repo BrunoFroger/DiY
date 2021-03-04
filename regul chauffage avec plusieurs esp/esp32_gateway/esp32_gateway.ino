@@ -69,7 +69,7 @@ void setup() {
 
     Serial.print("Setting soft-AP ... ");
     sprintf("Demarrage du point d'acces Wifi ssid=%s, pwd=%d", donneesGlobales.wifiSsid, donneesGlobales.wifiPwd); Serial.println(buffer);
-    WiFI.mode(WIFI_AP);
+    WiFi.mode=(WIFI_AP);
     boolean result = WiFi.softAP(donneesGlobales.wifiSsid, donneesGlobales.wifiPwd, 1, false, 8);
     if(result == true)
     {
