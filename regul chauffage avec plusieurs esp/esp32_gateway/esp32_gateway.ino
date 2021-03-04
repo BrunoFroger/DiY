@@ -92,7 +92,7 @@ void setup() {
             case WL_CONNECTION_LOST : Serial.println("WL_CONNECTION_LOST"); break;
             case WL_DISCONNECTED : Serial.println("WL_DISCONNECTED"); break;
         }
-        Serial.println ( WiFi.status() );
+        WiFi.begin(routeurSsid, routeurPwd);  
     }
     if (WiFi.status() != WL_CONNECTED){
         Serial.println("impossible de se connecter");
