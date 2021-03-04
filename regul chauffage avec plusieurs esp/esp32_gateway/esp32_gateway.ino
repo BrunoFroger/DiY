@@ -107,7 +107,7 @@ void loop(){
     }
     client = server.available();
     if (client){
-        Serial.println("traitement d'une requete")
+        Serial.println("traitement d'une requete");
         char adresseIpClient[20];
         IPAddress ipClient = client.remoteIP();
         sprintf(adresseIpClient,"%d.%d.%d.%d",ipClient[0],ipClient[1],ipClient[2],ipClient[3]);
