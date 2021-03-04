@@ -99,6 +99,7 @@ void setup() {
 void loop(){
 
     if (donneesGlobales.nbClientsConnectes != WiFi.softAPgetStationNum()){
+        Serial.println("changement du nombre de stations connectees");
         Serial.printf("%s => Stations connected = %d\n", WiFi.softAPgetStationNum());
         donneesGlobales.nbClientsConnectes = WiFi.softAPgetStationNum();
     }
