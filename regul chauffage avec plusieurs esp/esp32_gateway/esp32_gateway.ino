@@ -80,10 +80,11 @@ void setup() {
     Serial.println(routeurSsid);
     WiFi.begin(routeurSsid, routeurPwd);  
     int nbTentatives=0;
-    while ( WiFi.status() != WL_CONNECTED ) {
+    int status = WiFi.status();
+    while ( status != WL_CONNECTED ) {
         if (nbTentatives++ > 10) break;
-        Serial.print(WiFi.status()); Serial.print(" => ");
-        switch(status){
+        Serial.print(status); Serial.print(" => ");
+        switch(status{
             case WL_CONNECTED : Serial.println("WL_CONNECTED"); break;
             case WL_NO_SHIELD : Serial.println("WL_NO_SHIELD"); break;
             case WL_IDLE_STATUS : Serial.println("WL_IDLE_STATUS"); break;
@@ -94,8 +95,9 @@ void setup() {
             case WL_DISCONNECTED : Serial.println("WL_DISCONNECTED"); break;
         }
         delay (10000);
+        status = WiFi.status();
     }
-    if ( WiFi.status() != WL_CONNECTED){
+    if ( status != WL_CONNECTED){
         Serial.print("impossible de se connecter a");
     } else {
         Serial.print("vous etes connecte au routeur ");
