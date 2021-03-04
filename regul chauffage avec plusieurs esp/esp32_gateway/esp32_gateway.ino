@@ -40,8 +40,8 @@ char buffer [200];
 // routeur d'acces a internet
 //const char *routeurSsid     = "Livebox-006d";
 //const char *routeurPwd = "A23F1F7979C9DD3C5916324123";
-const char *routeurSsid     = "TP-LINK_88E2";
-const char *routeurPwd = "74546007";
+const char *routeurSsid = "TP-LINK_88E2";
+const char *routeurPwd  = "74546007";
 
 //=================================================
 //
@@ -78,11 +78,9 @@ void setup() {
     Serial.println("+-------------------------------+");
     Serial.print("tentative de connexion a ");
     Serial.println(routeurSsid);
-    int status = WiFi.begin(routeurSsid, routeurPwd);  
-    delay (10000);
+    WiFi.begin(routeurSsid, routeurPwd);  
     int nbTentatives=0;
-    while ( status != WL_CONNECTED ) {
-        //status = WiFi.begin(routeurSsid, routeurPwd);  
+    while ( WiFi.status() != WL_CONNECTED ) {
         if (nbTentatives++ > 10) break;
         Serial.print(status); Serial.print(" => ");
         switch(status){
@@ -97,7 +95,7 @@ void setup() {
         }
         delay (10000);
     }
-    if (status != WL_CONNECTED){
+    if ( WiFi.status() != WL_CONNECTED){
         Serial.print("impossible de se connecter a");
     } else {
         Serial.print("vous etes connecte au routeur ");
