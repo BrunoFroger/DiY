@@ -82,7 +82,7 @@ void refreshNtpNow(void){
         donneesGlobales.mois = formatedDate.substring(5,7).toInt();
         //Serial.println(formatedDate.substring(0,4));
         donneesGlobales.annee = formatedDate.substring(0,4).toInt();
-        sprintf(tmp,"Update NTP => %s %4d-%02d-%02d / %02d:%02d:%02d", 
+        sprintf(tmp,"Update NTP => %s %4d-%02d-%02d %02d:%02d:%02d", 
                     dayOfWeek[donneesGlobales.jourSemaine], donneesGlobales.annee, 
                     donneesGlobales.mois, donneesGlobales.jour, donneesGlobales.heure, 
                     donneesGlobales.minute, donneesGlobales.second);

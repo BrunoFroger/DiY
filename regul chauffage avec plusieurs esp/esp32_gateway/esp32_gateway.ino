@@ -62,6 +62,32 @@ void setup() {
     Serial.println("+                               +");
     Serial.println("+-------------------------------+");
 
+
+
+    Serial.println("+-------------------------------+");
+    Serial.println("+                               +");
+    Serial.println("+      Connexion Livebox        +");
+    Serial.println("+                               +");
+    Serial.println("+-------------------------------+");
+
+    #const char *routeurSsid     = "Livebox-006d";
+    #const char *routeurPwd = "A23F1F7979C9DD3C5916324123";
+    const char *routeurSsid     = "TP-LINK_88E2";
+    const char *routeurPwd = "74546007";
+    WiFi.begin(routeurSsid, routeurPwd);  
+    while ( WiFi.status() != WL_CONNECTED ) {
+        delay ( 500 );
+        Serial.print ( "." );
+    }
+    Serial.print("connecte au routeur : ");
+    Serial.println(routeurSsid);
+
+    Serial.println("+-------------------------------+");
+    Serial.println("+                               +");
+    Serial.println("+     Creation point d'acces    +");
+    Serial.println("+                               +");
+    Serial.println("+-------------------------------+");
+
     strcpy(donneesGlobales.wifiSsid, "gateway-chauffage");
     strcpy(donneesGlobales.wifiPwd, "0296911369");
 
