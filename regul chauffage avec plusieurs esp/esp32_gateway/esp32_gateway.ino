@@ -85,7 +85,7 @@ void setup() {
         Serial.print ( "." );
     }
     if (WiFi.status() != WL_CONNECTED){
-        Serrial.println("impossible de se connecter");
+        Serial.println("impossible de se connecter");
     } else {
         Serial.print("connecte au routeur : ");
         Serial.println(routeurSsid);
