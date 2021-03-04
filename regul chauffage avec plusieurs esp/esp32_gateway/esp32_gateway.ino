@@ -72,18 +72,22 @@ void setup() {
 
     Serial.println("+-------------------------------+");
     Serial.println("+                               +");
-    Serial.println("+      Connexion Livebox        +");
+    Serial.println("+      Connexion internet       +");
     Serial.println("+                               +");
     Serial.println("+-------------------------------+");
-
-
     WiFi.begin(routeurSsid, routeurPwd);  
+    int nbTentatives=0;
     while ( WiFi.status() != WL_CONNECTED ) {
         delay ( 500 );
+        if (nbTentatives > 20) break;
         Serial.print ( "." );
     }
-    Serial.print("connecte au routeur : ");
-    Serial.println(routeurSsid);
+    if (WiFi.status() != WL_CONNECTED){
+        Serrial.println("impossible de se connecter");
+    } else {
+        Serial.print("connecte au routeur : ");
+        Serial.println(routeurSsid);
+    }
 
     Serial.println("+-------------------------------+");
     Serial.println("+                               +");
