@@ -84,7 +84,7 @@ void setup() {
     while ( status != WL_CONNECTED ) {
         if (nbTentatives++ > 10) break;
         Serial.print(status); Serial.print(" => ");
-        switch(status{
+        switch(status){
             case WL_CONNECTED : Serial.println("WL_CONNECTED"); break;
             case WL_NO_SHIELD : Serial.println("WL_NO_SHIELD"); break;
             case WL_IDLE_STATUS : Serial.println("WL_IDLE_STATUS"); break;
