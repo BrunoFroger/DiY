@@ -35,6 +35,7 @@ WiFiServer server(80);
 //String header;
 
 WiFiClient client;
+char buffer [200];
 
 //=================================================
 //
@@ -67,7 +68,6 @@ void setup() {
     initGlobalDatas();
 
     Serial.print("Setting soft-AP ... ");
-    char buffer [100];
     sprintf("Demarrage du point d'acces Wifi ssid=%s, pwd=%d", donneesGlobales.wifiSsid, donneesGlobales.wifiPwd); Serial.println(buffer);
     boolean result = WiFi.softAP(donneesGlobales.wifiSsid, donneesGlobales.wifiPwd, 1, false, 8);
     if(result == true)
@@ -107,6 +107,7 @@ void loop(){
         char adresseIpClient[20];
         IPAddress ipClient = client.remoteIP();
         sprintf(adresseIpClient,"%d.%d.%d.%d",ipClient[0],ipClient[1],ipClient[2],ipClient[3]);
+        sprintf(buffer, "une requete recue de %s", adresseIpClient); Serial.println(buffer);
         analyseRequete(client,adresseIpClient);
     }
     refreshNtp();

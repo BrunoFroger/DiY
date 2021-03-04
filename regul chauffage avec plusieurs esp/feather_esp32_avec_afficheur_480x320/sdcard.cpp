@@ -146,7 +146,5 @@ void initSdcard(void){
     //getSdcardInfo("consigne");
     //getSdcardInfo("ville");
     //getSdcardInfo("test");
-    Serial.println("+----------------------------------------+");
-    Serial.println();
 }
 

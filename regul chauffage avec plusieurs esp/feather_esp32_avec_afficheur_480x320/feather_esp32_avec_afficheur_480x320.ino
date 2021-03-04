@@ -15,7 +15,8 @@
 #include "sdcard.hpp"
 
 
-#define LOOP_DELAY 5
+//#define LOOP_DELAY 5
+#define LOOP_DELAY 10
 #define REFRESH_DELAY_AFFICHAGE_DATAS   1000*2
 
 int nbMillisecondAffichageDatas = 0;
@@ -39,33 +40,27 @@ void setup() {
     Serial.println();
     char buffer[100];
     sprintf(buffer, "Serial initialized in %d ms", (100-timeoutInitSerial)); Serial.println(buffer);    
-    Serial.println("+-------------------------------+");
-    Serial.println("+                               +");
-    Serial.println("+      Feather ESP32 Affichage  +");
-    Serial.println("+                               +");
-    Serial.println("+-------------------------------+");
+    Serial.println("+----------------------------------+");
+    Serial.println("+                                  +");
+    Serial.println("+      Feather ESP32 Affichage     +");
+    Serial.println("+                                  +");
+    Serial.println("+----------------------------------+");
+    Serial.println("|        debut setup               |");
+    Serial.println("+----------------------------------+");
 
     strcpy(mesDonneesApi.wifiSsid, "gateway-chauffage");
     strcpy(mesDonneesApi.wifiPwd, "0296911369");
     strcpy(mesDonneesApi.espName, "Afficheur");
 
-    Serial.println("---------------------------");
-    Serial.println("start initTft");
     initTft();
-    Serial.println("start initTft");
-
-    Serial.println("---------------------------");
-    Serial.println("start initWifi");
     initWifi(false);
-    Serial.println("end initWifi");
-
     initApi();
-
     initEncoder();
-
     initSdcard();
 
-    Serial.println("end of setup");
+    Serial.println("+----------------------------------+");
+    Serial.println("|        fin de setup              |");
+    Serial.println("+----------------------------------+");
   
 }
  
@@ -88,7 +83,6 @@ void loop(){
         nbMillisecondAffichageDatas = millis(); 
     }
 
-    //delay(100);
     delay(LOOP_DELAY);
     
 }

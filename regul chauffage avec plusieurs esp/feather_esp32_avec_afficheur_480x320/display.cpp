@@ -338,7 +338,11 @@ void displayValeurs(){
 //
 //=================================================
 void initTft(){
-    Serial.println("Touch Paint!");
+    Serial.println("+----------------------------------------+");
+    Serial.println("|                                        |");
+    Serial.println("|           Init display                 |");
+    Serial.println("|                                        |");
+    Serial.println("+----------------------------------------+");
 
     tft.begin();
 

@@ -96,10 +96,11 @@ void afficheDatas(void){
 //=========================================
 void setGatewayrequest(char *requete){
     char tmp[200];
-    if (WiFi.status() == WL_CONNECTED){
+    if (isWifiConnected(true)){
         char gatewayStringIp[30];
-        gatewayIp.toString().toCharArray(gatewayStringIp,30);
-        wifiClient.connect(gatewayIp,80);
+        //gatewayIp.toString().toCharArray(gatewayStringIp,30);
+        //wifiClient.connect(gatewayIp,80);
+        wifiClient.connect(mesDonneesApi.ipGateway,80);
         sprintf(tmp, "GET /%s HTTP/1.1", requete);
         wifiClient.println(tmp);
         wifiClient.println();
@@ -116,15 +117,20 @@ void setGatewayrequest(char *requete){
 //
 //=========================================
 void initApi(void){
+    Serial.println("+----------------------------------------+");
+    Serial.println("|                                        |");
+    Serial.println("|           Init API                     |");
+    Serial.println("|                                        |");
+    Serial.println("+----------------------------------------+");
     Serial.println("api.cpp => init api");
     mesDonneesApi.heureModifiee = true;
     mesDonneesApi.dateModifiee = true;
     mesDonneesApi.parametresModifies = true;
-    mesDonneesApi.WifiConnected = isWifiConnected();
+    mesDonneesApi.WifiConnected = isWifiConnected(true);
     mesDonneesApi.temperatureMesuree = 205;
     mesDonneesApi.refreshMesures = true;
 
-    afficheDatas();
+    //afficheDatas();
     char buffer[100];
     Serial.println("envoi du nom de l'esp a la gateway");
     sprintf(buffer, "setName?nom=%s", mesDonneesApi.espName);
@@ -416,7 +422,7 @@ void updateDatas(void){
         // refresh wifi
         //--------------        
         int refreshWifi = DELAY_REFRESH_TEST_WIFI;
-        if (!isWifiConnected()) {
+        if (!isWifiConnected(true)) {
             refreshWifi = 5000;
         }
         nbMillisecondUpdateWifi = millis();     // on desactive le refresh pour le moment
@@ -425,10 +431,11 @@ void updateDatas(void){
             Serial.println("------------------- requete  wifi-------------------");
             //Serial.println("api.cpp->updateDatas => refresh wifi");
             nbMillisecondUpdateWifi = millis();
-            bool tmp = isWifiConnected();
+            bool tmp = isWifiConnected(true);
             if (tmp != mesDonneesApi.WifiConnected) {
                 mesDonneesApi.WifiConnected = tmp;
                 mesDonneesApi.parametresModifies = true;
+                datasUpated = true;
                 /*Serial.print("api.cpp => updateDatas : changement d'etat du wifi -> ");
                 if (tmp){
                     Serial.println("true");
@@ -440,6 +447,7 @@ void updateDatas(void){
                 initWifi(true);
                 setGatewayrequest("getNtp");
                 uneRequeteDejaActive = true;
+                datasUpated = true;
                 delay(100);
             }
             //Serial.println("api.cpp => uodateDatas ");

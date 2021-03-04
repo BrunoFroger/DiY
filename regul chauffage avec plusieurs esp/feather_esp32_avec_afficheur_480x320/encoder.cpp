@@ -44,6 +44,11 @@ void interruptionEncoder(){
 //
 //=================================================
 void initEncoder(void){
+    Serial.println("+----------------------------------------+");
+    Serial.println("|                                        |");
+    Serial.println("|           Init encoder                 |");
+    Serial.println("|                                        |");
+    Serial.println("+----------------------------------------+");
     pinMode (encoderPinCLK, INPUT_PULLUP);
     digitalWrite(encoderPinCLK,HIGH);
     pinMode (encoderPinDT, INPUT_PULLUP);

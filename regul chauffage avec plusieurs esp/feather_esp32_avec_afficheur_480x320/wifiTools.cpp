@@ -14,11 +14,11 @@
 //char wifiSsid[25];
 //char wifiPassword[50];
 int cptTryWifi = 0;
-boolean wifiConnected = false;
-boolean wifiFound = false;
+//boolean wifiConnected = false;
+//boolean wifiFound = false;
 WiFiClient wifiClient;
-WiFiServer wifiServer(80);//Ecouter le port 80
-IPAddress gatewayIp;
+//WiFiServer wifiServer(80);//Ecouter le port 80
+//IPAddress gatewayIp;
 
 //=========================================
 //
@@ -32,6 +32,7 @@ void deconnecteWifi(){
         delay(100);
         WiFi.disconnect();
         //Serial.println("deconnecteWifi => OK");
+        mesDonneesApi.WifiConnected = false;
     }
     //Serial.println("deconnecteWifi => fin");
 }
@@ -43,6 +44,11 @@ void deconnecteWifi(){
 //=========================================
 void initWifi(bool silence){    // init wifi connection
 
+    if (!silence) Serial.println("+----------------------------------------+");
+    if (!silence) Serial.println("|                                        |");
+    if (!silence) Serial.println("|           Init Wifi                    |");
+    if (!silence) Serial.println("|                                        |");
+    if (!silence) Serial.println("+----------------------------------------+");
     if (!silence){
         Serial.println("initWifi => debut");
     } else {
@@ -87,27 +93,36 @@ void initWifi(bool silence){    // init wifi connection
     }
     if (cpt2 > 20){
         if (!silence) Serial.println("Wifi non connecte");
+        mesDonneesApi.WifiConnected = false;
     } else {
         Serial.println("");
-        wifiConnected = true;
+        mesDonneesApi.WifiConnected = true;
         if (!silence) Serial.println("WiFi connected");
     }
 
     // Print the IP address
+    if (!silence) Serial.println("adresse IP locale");
+    IPAddress tmpIp = WiFi.localIP();
+    //Serial.println(tmpIp);
     if (!silence) Serial.print("Use this URL to connect: ");
     if (!silence) Serial.print("http://");
-    IPAddress tmpIp = WiFi.localIP();
     sprintf(mesDonneesApi.ipLocale,"%d.%d.%d.%d",tmpIp[0],tmpIp[1],tmpIp[2],tmpIp[3]);
-    //Serial.print(WiFi.localIP());
     if (!silence) Serial.print(mesDonneesApi.ipLocale);
     if (!silence) Serial.println("/");  //Utiliser cette URL sous Firefox de preference à Chrome
 
-    //IPAddress gatewayIp = WiFi.gatewayIP();
-    gatewayIp = WiFi.gatewayIP();
-    sprintf(mesDonneesApi.ipGateway,"%d.%d.%d.%d",gatewayIp[0],gatewayIp[1],gatewayIp[2],gatewayIp[3]);
+    isWifiConnected(false);
+
+    if (!silence) Serial.println("adresse IP gateway");
+    tmpIp = WiFi.gatewayIP();
+    //Serial.println(tmpIp);
+    sprintf(mesDonneesApi.ipGateway,"%d.%d.%d.%d",tmpIp[0],tmpIp[1],tmpIp[2],tmpIp[3]);
     if (!silence) Serial.print("La gateway est : ");
     if (!silence) Serial.println(mesDonneesApi.ipGateway);
 
+    Serial.print("WifiConnected : "); Serial.println(WiFi.status() == WL_CONNECTED);
+
+    isWifiConnected(false);
+    
     if (!silence) Serial.println("initWifi => fin");
 }
 
@@ -134,14 +149,14 @@ char *getIp(){
 //          isWifiConnected
 //
 //=========================================
-boolean isWifiConnected(){
+boolean isWifiConnected(boolean silence){
     if (WiFi.status() == WL_CONNECTED) {
-        //Serial.println("wifiTools.cpp => isWifiConnected : TRUE");
-        wifiConnected = true;
+        if (!silence) Serial.println("wifiTools.cpp => isWifiConnected : TRUE");
+        mesDonneesApi.WifiConnected = true;
     } else {
-        //Serial.println("wifiTools.cpp => isWifiConnected : FALSE");
-        wifiConnected = false;
+        if (!silence) Serial.println("wifiTools.cpp => isWifiConnected : FALSE");
+        mesDonneesApi.WifiConnected = false;
     }
     //wifiConnected = (WiFi.status() == WL_CONNECTED);
-    return wifiConnected;
+    return mesDonneesApi.WifiConnected;
 }

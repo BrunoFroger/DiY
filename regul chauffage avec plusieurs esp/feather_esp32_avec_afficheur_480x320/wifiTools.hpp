@@ -8,12 +8,12 @@
 #include <WiFi.h>
 
 extern WiFiClient wifiClient;
-extern WiFiServer wifiServer;
-extern IPAddress gatewayIp;
+//extern WiFiServer wifiServer;
+//extern IPAddress gatewayIp;
 
 extern void initWifi(bool silence);
 extern char *getSsid();
 extern char *getIp();
-extern boolean isWifiConnected();
+extern boolean isWifiConnected(bool silence);
 
 #endif
