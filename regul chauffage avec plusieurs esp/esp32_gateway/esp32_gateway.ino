@@ -99,7 +99,7 @@ void setup() {
 void loop(){
 
     if (donneesGlobales.nbClientsConnectes != WiFi.softAPgetStationNum()){
-        Serial.printf("Stations connected = %d\n", WiFi.softAPgetStationNum());
+        Serial.printf("%s => Stations connected = %d\n", WiFi.softAPgetStationNum());
         donneesGlobales.nbClientsConnectes = WiFi.softAPgetStationNum();
     }
     client = server.available();
@@ -117,7 +117,7 @@ void loop(){
         afficheDatas();
     }
    
-    //nbMillisecondOpenweathermap = millis();     // on desactive le refresh pour le moment
+    nbMillisecondOpenweathermap = millis();     // on desactive le refresh pour le moment
     if ((millis() - nbMillisecondOpenweathermap) >= DELAY_REFRESH_OPENWEATHERMAP){
         nbMillisecondOpenweathermap = millis();
         refreshMeteoInfos();

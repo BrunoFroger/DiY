@@ -9,6 +9,7 @@
 
 #include "api.hpp"
 #include "wifiTools.hpp"
+#include "encoder.hpp"
 
 // definition des delais de rafraichissement des differentes donnees (en ms)
 // il ne faut pas que deux delay aient la meme valeur
@@ -64,6 +65,12 @@ void afficheDatas(void){
     Serial.println(tmp);
     Serial.println("+------------------+--------------------+");
     sprintf(tmp,   "| temperature      |  %10d        |", mesDonneesApi.temperatureMesuree);
+    Serial.println(tmp);
+    Serial.println("+------------------+--------------------+");
+    sprintf(tmp,   "| roue codeuse     |  %10d        |", getEncoder());
+    Serial.println(tmp);
+    if (isButtonPressed()) strcpy(status,"ON"); else strcpy(status,"OFF");
+    sprintf(tmp,   "| boutton appuyé   |  %10s        |", status);
     Serial.println(tmp);
     Serial.println("+------------------+--------------------+");
     sprintf(tmp,   "| Ssid             |%17s   |", mesDonneesApi.wifiSsid);
@@ -123,7 +130,7 @@ void initApi(void){
     sprintf(buffer, "setName?nom=%s", mesDonneesApi.espName);
     setGatewayrequest(buffer);
     uneRequeteDejaActive = true;
-
+    datasUpated = true;
     delay(1000);
 }
 
@@ -412,7 +419,7 @@ void updateDatas(void){
         if (!isWifiConnected()) {
             refreshWifi = 5000;
         }
-        //nbMillisecondUpdateWifi = millis();     // on desactive le refresh pour le moment
+        nbMillisecondUpdateWifi = millis();     // on desactive le refresh pour le moment
         if ((millis() - nbMillisecondUpdateWifi) >= refreshWifi){     // update cnx wifi
             //Serial.println();
             Serial.println("------------------- requete  wifi-------------------");
@@ -433,7 +440,7 @@ void updateDatas(void){
                 initWifi(true);
                 setGatewayrequest("getNtp");
                 uneRequeteDejaActive = true;
-                delay(1000);
+                delay(100);
             }
             //Serial.println("api.cpp => uodateDatas ");
         } 
@@ -443,7 +450,7 @@ void updateDatas(void){
         //--------------
         // refresh NTP
         //--------------
-        //nbMillisecondUpdateNTP = millis();     // on desactive le refresh pour le moment
+        nbMillisecondUpdateNTP = millis();     // on desactive le refresh pour le moment
         //if (annee < 2000) setGatewayrequest("getNtp");
         int refreshNtp = DELAY_REFRESH_NTP;
         if (annee < 2020) {
@@ -456,7 +463,7 @@ void updateDatas(void){
             //Serial.println("api.cpp->updateDatas => refresh ntp");
             setGatewayrequest("getNtp");
             uneRequeteDejaActive = true;
-            delay(1000);
+            delay(100);
         } 
     }
 
@@ -464,7 +471,7 @@ void updateDatas(void){
         //--------------
         // refresh Temp
         //--------------
-        //nbMillisecondUpdateTemperature = millis();     // on desactive le refresh pour le moment
+        nbMillisecondUpdateTemperature = millis();     // on desactive le refresh pour le moment
         if ((millis() - nbMillisecondUpdateTemperature) >= DELAY_REFRESH_TEMPERATURE){
             nbMillisecondUpdateTemperature = millis();
             //Serial.println();
@@ -480,7 +487,7 @@ void updateDatas(void){
         //------------------
         // refresh chauffage
         //------------------
-        //nbMillisecondUpdateDonneesChauffage = millis();     // on desactive le refresh pour le moment
+        nbMillisecondUpdateDonneesChauffage = millis();     // on desactive le refresh pour le moment
         if ((millis() - nbMillisecondUpdateDonneesChauffage) >= DELAY_REFRESH_DONNEE_CHAUFFAGE){
             nbMillisecondUpdateDonneesChauffage = millis();
             //Serial.println();

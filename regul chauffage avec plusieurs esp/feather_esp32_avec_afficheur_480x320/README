@@ -4,7 +4,7 @@ Materiel utilisé :
 
 configuration de l'IDE Arduino pour televerser ce code
 
-- type de carte : ESP8266 Boards (2.7.4) / Adafruit Feather HUZZAH 8266  NOK
+- type de carte : ESP8266 Boards (2.7.4) / Adafruit Feather HUZZAH 8266  OK
 - type de carte : ESP32 Arduino / Adafruit ESP32 Feather    OK
 - type de carte : ESP32 Arduino (in sketchbook) / ESP32 dev module NOK
 - port : /dev/cu.SLAB_USBtoUART     OK
@@ -18,3 +18,13 @@ http://api.openweathermap.org/data/2.5/weather?q=Louannec&units=metric&lang=fr&a
 
 
 infos pou recuperation datas geoloc
+
+
+
+infos branchement roue codeuse
+broches roue codeuse          Arduino
+        GND                     GND
+        +                       3V
+        SW                      33
+        DT                      14
+        CLK                     32

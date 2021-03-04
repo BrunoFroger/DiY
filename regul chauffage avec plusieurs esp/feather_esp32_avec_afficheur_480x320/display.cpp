@@ -77,6 +77,26 @@ char oldWifiConnected[50];
 char oldTemperatureMesuree[50];
 char oldTemperature[50];
 char oldPuissance[50];
+char oldTitle[50];
+
+//=================================================
+//
+//      readTouchScreen
+//
+//=================================================
+/*
+void readTouchScreen(void){
+    char buffer[100];
+    if (ts.touched()){
+        Serial.println("touche");
+    }
+    if (! ts.bufferEmpty()){
+        TS_Point p = ts.getPoint();
+        p.x = map(p.x, 0, 4095, 0, tft.width());
+        p.y = map(p.y, 0, 4095, 0, tft.height()); 
+        sprintf(buffer,"p.x = %d, p.y = %d", p.x, p.y); Serial.println(buffer);
+    }
+}*/
 
 //=================================================
 //
@@ -85,13 +105,20 @@ char oldPuissance[50];
 //=================================================
 void displayTitle(char *title){
     if (refreshTitle){
-        //Serial.print("displayTitle : ");
-        //Serial.println(title);
+        Serial.print("displayTitle : ");
+        Serial.println(title);
+        tft.setTextSize(3); 
+        // efface ancien titre
+        tft.setCursor(15,0);
+        tft.setTextColor(_BLACK);
+        tft.println(oldTitle);
+        // affiche nouveau titre
         tft.setCursor(15,0);
         tft.setTextColor(_RED);
-        tft.setTextSize(3); 
         tft.println(title);
         refreshTitle = false;
+        // memorise titre pour effacement
+        strcpy(oldTitle,title);
     }
 }
 
@@ -104,7 +131,7 @@ void displayParametres(){
     if (mesDonneesApi.parametresModifies){
         char tmp[200];
         mesDonneesApi.parametresModifies = false;
-        //Serial.println("display.cpp => displayParametres");
+        Serial.println("display.cpp => displayParametres");
         int colorCadre = _YELLOW;
         int originX = 5;
         int originY = (tft.height() / 2) + 40;
@@ -175,7 +202,7 @@ void displayParametres(){
 //=================================================
 void displayMesures(){
     if (mesDonneesApi.refreshMesures){
-        //Serial.println("displayMesures");
+        Serial.println("displayMesures");
         int colorCadre = _WHITE;
         int originX = tft.width() / 2 + 10;;
         int originY = (tft.height() / 2) + 40;
@@ -339,8 +366,8 @@ void initTft(){
         Serial.println("Couldn't start touchscreen controller");
     }else{
         Serial.println("Touchscreen started");
-    }
-    */
+    }*/
+    
 
     couleurTexte = _WHITE;
     tft.setTextColor(couleurTexte);
@@ -354,11 +381,10 @@ void initTft(){
     strcpy(oldDate, "");
     strcpy(oldChauffageOnOff, "");
     strcpy(oldWifiConnected, "");
+    displayTitle("init en cours ....");
+    refreshTitle = true;
     
 }
-
-
-
 
 //=================================================
 //

@@ -9,4 +9,6 @@
 extern void initTft();
 extern void refreshDisplay(void);
 
+extern void readTouchScreen(void);
+
 #endif

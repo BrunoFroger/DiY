@@ -71,7 +71,7 @@ void initWifi(bool silence){    // init wifi connection
     int cpt2=0;
     while (WiFi.status() != WL_CONNECTED) {  //Attente de la connexion
         delay(500);
-        Serial.print("wifiStatus = "); Serial.println(WiFi.status());
+        //Serial.print("wifiStatus = "); Serial.println(WiFi.status());
         //char tmp[10];
         //sprintf(tmp,"%d,",cpt);
         //Serial.print(tmp);

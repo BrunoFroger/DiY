@@ -1,0 +1,21 @@
+Liste des actions a realiser :
+
+- nouvelles fonctionnalites :  
+    - ajouter agenda de gestion de la consigne
+        - creer nouvel ecran de parametrage de la consigne
+            - fixer plusieurs type de journees
+            - fixer plusieurs valeurs de consigne
+            - fixer plusieurs plages horaires
+            - selectionner quelle valeur de consigne dans chaque plage horaire pour chauqe tye de journée
+        - creer ecran graphique de visualisation de la consigne pour chaque type de journée
+    - ajouter roue codeuse 
+        - balayage des donnees modifiable en actionnant la roue codeuse
+        - passage en mode modification en appuyant sur le bouton de la roue codeuse
+        - validation nouvelle valeur et retour en mode balayage si appui sur bouton roue codeuse
+    - activation de l'ecran tactile :
+        - selection de la zone a modifier pour modification 
+            - mise en surbrillance de la zone selectionnee
+
+        - selection de la valeur a modifier avec la roue codeuse
+
+
